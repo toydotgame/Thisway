@@ -71,4 +71,3 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 * Test if spamming the command makes the player's Y go down like you would get using vanilla commands. (e.g: `/tp @p ~100 ~ ~`)
 	* More info in issue [#1](https://github.com/Toydotgame/Thisway/issues/1).
 * Make a fork of this plugin with comments removed, and code trimmed as much as I can get it; making a slightly speedier and light-weight version.
-* Include Spigot server `.jar` in the root of this repo., for contributors and people who want to build from source.
