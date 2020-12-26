@@ -8,136 +8,136 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+// FIX PLS DEBUG NO WORK
+// mayb remove debug and do later
+
 public class Thisway implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(args.length == 1) { // Checking for exactly ONE argument.
-			if(args[0].matches("^[0-9]*$") && args[0].length() >= 1 && args[0] != "0") { // Making sure said argument is a number, and is not 0. (Plus a hard limit of 32,767 blocks to be TPed)
-				if(Integer.parseInt(args[0])  < 32768) {
-					if (sender instanceof Player) { // Checking that the sender is a player.
-						Player player = (Player) sender;
-						
-						/* 
-						 * PLAYER FACING DETECTOR
-						 * */
-						float yaw = player.getEyeLocation().getYaw();
-						sender.sendMessage("Yaw is: " + String.valueOf(yaw));
-						
-						if(yaw < 0) {
-					        yaw += 360;
-					    }
-					    if(yaw >= 315 || yaw < 45) {
-					    	sender.sendMessage("SOUTH");
-					    	DataStorage.facing = "SOUTH";
-					    } else if(yaw < 135) {
-					    	sender.sendMessage("WEST");
-					    	DataStorage.facing = "WEST";
-					    } else if(yaw < 225) {
-					    	sender.sendMessage("NORTH");
-					    	DataStorage.facing = "NORTH";
-					    } else if(yaw < 315) {
-					    	sender.sendMessage("EAST");
-					    	DataStorage.facing = "EAST";
-					    }
-					    /* 
-					     * END PLAYER FACING DETECTOR
-					     * */
-					    
-					    
-						
-					    /* 
-					     * PLAYER POSITION IN WORLD DETECTOR
-					     * */
-					     Location location = player.getLocation();
-					     int playerX = location.getBlockX();
-					     int playerY = location.getBlockY();
-					     int playerZ = location.getBlockZ();
-					     
-					     sender.sendMessage("Position: " + playerX + ", " + playerY + ", " + playerZ + " (X, Y, Z)"); // WORKED FIRST TIME, BABY!
-					     // Actually, now that I think of it; if it _didn't_ work first time, that would be more impressive.
-					    /* 
-					     * END PLAYER POSITION DETECTOR
-					     * */
-					     
-					     
-					     
-					    /*
-					     * PLAYER TELEPORTER
-					     * I expect this to go wrong, in so many ways.
-					     * */
-					     // Player TP Part 1
-					     if(DataStorage.facing == "NORTH") {
-					    	 DataStorage.xModDistance = 0;
-					    	 DataStorage.zModDistance = Integer.parseInt("-" + args[0]);
-					     } else if(DataStorage.facing == "SOUTH") {
-					    	 DataStorage.xModDistance = 0;
-					    	 DataStorage.zModDistance = Integer.parseInt(args[0]);
-					     } else if(DataStorage.facing == "EAST") {
-					    	 DataStorage.xModDistance = Integer.parseInt(args[0]);
-					    	 DataStorage.zModDistance = 0;
-					     } else if(DataStorage.facing == "WEST") {
-					    	 DataStorage.xModDistance = Integer.parseInt("-" + args[0]);
-					    	 DataStorage.zModDistance = 0;
-					     }
-					     
-					     int playerModifiedX = playerX + DataStorage.xModDistance;
-					     int playerModifiedZ = playerZ + DataStorage.zModDistance;
-					     
-					     sender.sendMessage("Modified TP distance: " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + " (X, Y, Z)");
-					     
-					     
-					    // Part 2!!!
-					    
-					    String worldName = player.getLocation().getWorld().getName();
-					    sender.sendMessage("Current world is called: " + worldName);
-					    float pitch = player.getEyeLocation().getPitch(); // No need to get the yaw, I've already taken it earlier.
-					    
-					    Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch);
-					    player.teleport(newLocation);
-					    /* 
-					     * END PLAYER TELEPORTER
-					     * */
-					   
-						return true;
-					} else { // If the sender is not a player:
-						System.out.print("Only players can send this command!");
-						
-						return false;
-					}
-				} else {
-					if(sender instanceof Player) {
-						sender.sendMessage(ChatColor.RED + "Maximum 32,767 blocks exceeded!");
-					} else {
-						System.out.print("Maximum 32,767 blocks exceeded!");
-					}
-					
-					return false;
-				}
-			} else { // If args.length _is_ 1, but it's either 0 or it's not a number.
-				if(args[0] == "0") {
-					if(sender instanceof Player) {
-						sender.sendMessage(ChatColor.RED + "Must be a number more than 0!");
-					} else {
-						System.out.print("Must be a number more than 0!");
-					}
-				} else {
-					if(sender instanceof Player) {
-						sender.sendMessage(ChatColor.RED + "Numbers only!");
-					} else {
-						System.out.print("Numbers only!");
-					}
-				}
-				
+		if(sender instanceof Player) { // Checks that the command was sent by a player.
+			if(args.length == 2 && args[1] == "true" && (args[0].length() > 0 && (args[0].matches("^[0-9]*$") && Integer.parseInt(args[0]) < 32768 && args[0] != "0" ))) { // If there are two arguments and the second is called "true", run: // Also checks arg 1's validity as a number.
+				DataStorage.debug = true;
+				sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
+				thisway(sender, args);
+				sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
+				return true;
+			} else if(args.length == 2 && args[1] == "false" && (args[0].length() > 0 && (args[0].matches("^[0-9]*$") && Integer.parseInt(args[0]) < 32768 && args[0] != "0" ))) { // Checks if there's two arguments; and if the second is "false". // + Added arg 1 validity check.
+				DataStorage.debug = false;
+				thisway(sender, args);
+				return true;
+			} else if(args.length == 1 && args[0].length() > 0 && (args[0].matches("^[0-9]*$") && Integer.parseInt(args[0]) < 32768 && args[0] != "0" )) { // If there's only _one_ argument; check that: args[0] is not null (Length > 0); args[0] is all digits, nothing else; args[0] < 32,768; args[0] is _not_ 0.
+				// [I] added this to a new if() statement to keep things simple.
+				// If I wanted to I could put the things in this statement as an _or_ option in the above if(), but that would make lines too long and code too messy.
+				DataStorage.debug = false;
+				thisway(sender, args);
+				return true;
+			} else { // If arguments are invalid, run:
+				sender.sendMessage(ChatColor.RED + "Invalid arguments!");
 				return false;
-			}
-		} else { // If args.length != 1.
-			if(sender instanceof Player) {
-				sender.sendMessage(ChatColor.RED + "There must be exactly ONE argument!");
-			} else {
-				System.out.print("There must be exactly ONE argument!");
-			}
-			
+			} // Ends `if(args.length == 2 && args[1] == "true") {}`. Ends _debug = true_ check if there's two arguments. Also ends the other checks about arguments (First level of checks, that is!).
+		} else { // Else statement for: `if(sender instanceof Player) {}`
+			// If sender is not player, run:
+			System.out.print("[Thisway] Only players can use this command!");
 			return false;
+		} // Ends `if(sender instanceof Player) {}`. Ends _player is sender_ check.
+	} // Ends `public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {}`. Ends main method (onCommand()).
+	
+	public void thisway(CommandSender sender, String[] args) { // Most likely needed to keep onCommand() method simple and prevent two copies of the code from being needed in one class.
+		Player player = (Player) sender;
+		
+		// This detects which way the player is facing:
+		float yaw = player.getEyeLocation().getYaw();
+		if(DataStorage.debug = true) { // You'll see these a bunch, they determine if they should send debug stats judged by if DataStorage.debug is true.
+			sender.sendMessage("Player Yaw: " + String.valueOf(yaw));
 		}
-	}
-}
+		
+		if(yaw < 0) {
+			yaw += 360;
+			// I don't know _exactly_ what this does, it's some mathematical function from the Bukkit forums though - and it works. ;)
+		}
+		if(yaw >= 315 || yaw < 45) {
+			if(DataStorage.debug = true) {
+				sender.sendMessage("Player Facing: SOUTH");
+			}
+			DataStorage.facing = "SOUTH"; // I really love the DataStorage class, it's so neat!
+		} else if(yaw < 135) {
+			if(DataStorage.debug = true) {
+				sender.sendMessage("Player Facing: WEST");
+			}
+			DataStorage.facing = "WEST";
+		} else if(yaw < 225) {
+			if(DataStorage.debug = true) {
+				sender.sendMessage("Player Facing: NORTH");
+			}
+			DataStorage.facing = "NORTH";
+		} else if(yaw < 315) {
+			if(DataStorage.debug = true) {
+				sender.sendMessage("Player Facing: EAST");
+			}
+			DataStorage.facing = "EAST";
+		}
+		
+		
+		
+		// _This_ detects the player's coordinates!:
+		Location location = player.getLocation();
+		int playerX = location.getBlockX();
+		int playerY = location.getBlockY();
+		int playerZ = location.getBlockZ();
+		if(DataStorage.debug = true) {
+			sender.sendMessage("Player Position: " + playerX + ", " + playerY + ", " + playerZ); // Simple debug for what coordinates it's looking at.
+		}
+		
+		
+		
+		// This gets the coordinates it needs to TP to:
+		if(DataStorage.facing == "NORTH") {
+			// North in Minecraft is on the -Z axis. I'll modify the coordinates as such!
+			DataStorage.xModDistance = 0;
+			DataStorage.zModDistance = Integer.parseInt("-" + args[0]);
+		} else if(DataStorage.facing == "SOUTH") {
+			// South is +Z in-game.
+			DataStorage.xModDistance = 0;
+			DataStorage.zModDistance = Integer.parseInt(args[0]);
+		} else if(DataStorage.facing == "EAST") {
+			// East is +X.
+			DataStorage.xModDistance = Integer.parseInt(args[0]);
+			DataStorage.zModDistance = 0;
+		} else if(DataStorage.facing == "WEST") {
+			// West is -X.
+			DataStorage.xModDistance = Integer.parseInt("-" + args[0]);
+			DataStorage.zModDistance = 0;
+		}
+		
+		int playerModifiedX = playerX + DataStorage.xModDistance;
+		/* I hopefully shouldn't _need_ to modify the Y; both due to the plugin being for horizontal teleportation, not vertical - and I'm hoping Bukkit/Spigot uses a different teleportation system than Minecraft 1.6:
+		 * In vanilla Minecraft [1.6], when you TP - say - 100 blocks ahead: `/tp @p ~100 ~ ~`
+		 * ...and you spam that command in, after a few goes, you'll start going down into the ground.
+		 * If Bukkit _does_ use the same TP system as that, and _also_ has that bug; I'll need to make a modified Y which TPs you up 0.2 (Or whatever height difference it actually is) blocks each time you use the command,
+		 * thus compensating for the height you descend whilst TPing. */
+		int playerModifiedZ = playerZ + DataStorage.zModDistance;
+		if(DataStorage.debug = true) {
+			sender.sendMessage("New Player Position (To TP to): " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ);
+		}
+		
+		
+		
+		// This bit actaully TPs the player!
+		String worldName = player.getLocation().getWorld().getName(); // Bloody complicated to just get the world name as a string, innit?
+		if(DataStorage.debug = true) {
+			sender.sendMessage("Current World: " + worldName);
+		}
+		/* I get the world name in case the current world isn't called "world",
+		 * or is the main world has a different name,
+		 * _or_ if the command is being used in a different dimension _or_ world;
+		 * due to plugins like Multiverse messing this up. */
+		
+		float pitch = player.getEyeLocation().getPitch();
+		// No need to get the yaw, I got it earlier using similar code.
+		
+		Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
+		player.teleport(newLocation);
+		
+		sender.sendMessage("Teleport successfull.");
+	} // Ends `public void thisway() {}`. Ends thisway() method.
+} // Ends `public class Thisway implements CommandExecutor {}`. Ends class.
