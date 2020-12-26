@@ -1,6 +1,13 @@
 # Compiled class file
 *.class
 
+# Eclipse build directory
+/bin
+
+# Eclipse project files
+.project
+.classpath
+
 # Log file
 *.log
 
