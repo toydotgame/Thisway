@@ -8,31 +8,46 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-// FIX PLS DEBUG NO WORK
-// mayb remove debug and do later
-
 public class Thisway implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(sender instanceof Player) { // Checks that the command was sent by a player.
-			if(args.length == 2 && args[1] == "true" && (args[0].length() > 0 && (args[0].matches("^[0-9]*$") && Integer.parseInt(args[0]) < 32768 && args[0] != "0" ))) { // If there are two arguments and the second is called "true", run: // Also checks arg 1's validity as a number.
-				DataStorage.debug = true;
-				sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
-				thisway(sender, args);
-				sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
-				return true;
-			} else if(args.length == 2 && args[1] == "false" && (args[0].length() > 0 && (args[0].matches("^[0-9]*$") && Integer.parseInt(args[0]) < 32768 && args[0] != "0" ))) { // Checks if there's two arguments; and if the second is "false". // + Added arg 1 validity check.
-				DataStorage.debug = false;
-				thisway(sender, args);
-				return true;
-			} else if(args.length == 1 && args[0].length() > 0 && (args[0].matches("^[0-9]*$") && Integer.parseInt(args[0]) < 32768 && args[0] != "0" )) { // If there's only _one_ argument; check that: args[0] is not null (Length > 0); args[0] is all digits, nothing else; args[0] < 32,768; args[0] is _not_ 0.
-				// [I] added this to a new if() statement to keep things simple.
-				// If I wanted to I could put the things in this statement as an _or_ option in the above if(), but that would make lines too long and code too messy.
-				DataStorage.debug = false;
-				thisway(sender, args);
-				return true;
+			if(args.length == 1) { // If there's only _one_ argument; check that: args[0] is all digits, nothing else; args[0] is _not_ 0.
+				if(args[0].matches("^[0-9]*$") && args[0] != "0") {
+					DataStorage.debug = false;
+					thisway(sender, args);
+					return true;
+				} else {
+					sender.sendMessage(ChatColor.RED + "Invalid argument!");
+					return false;
+				}
+			} else if(args.length == 2) { // If there's _two_ arguments:
+				if(args[1].equalsIgnoreCase("true")) { // If the second argument is "true':
+					if(args[0].matches("^[0-9]*$") && args[0] != "0") { // If the first argument is an accepted number.
+						DataStorage.debug = true;
+						sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
+						thisway(sender, args);
+						sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
+						return true;
+					} else {
+						sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
+						return false;
+					} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. Ends arg 1 number check.
+				} else if(args[1].equalsIgnoreCase("false")) { // If arg 2 is "false":
+					if(args[0].matches("^[0-9]*$") && args[0] != "0") { // Number validity check like before.
+						DataStorage.debug = false;
+						thisway(sender, args);
+						return true;
+					} else {
+						sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
+						return false;
+					} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. (Number validity check)
+				} else {
+					sender.sendMessage(ChatColor.RED + "Invalid second argument!");
+					return false;
+				} // Ends `if(args[1] == "true")` or `else if(args[1] == "false")`. (Debug toggle argument)
 			} else { // If arguments are invalid, run:
-				sender.sendMessage(ChatColor.RED + "Invalid arguments!");
+				sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
 				return false;
 			} // Ends `if(args.length == 2 && args[1] == "true") {}`. Ends _debug = true_ check if there's two arguments. Also ends the other checks about arguments (First level of checks, that is!).
 		} else { // Else statement for: `if(sender instanceof Player) {}`
@@ -47,7 +62,13 @@ public class Thisway implements CommandExecutor {
 		
 		// This detects which way the player is facing:
 		float yaw = player.getEyeLocation().getYaw();
-		if(DataStorage.debug = true) { // You'll see these a bunch, they determine if they should send debug stats judged by if DataStorage.debug is true.
+		if(DataStorage.debug == true) { // You'll see these a bunch, they determine if they should send debug stats judged by if DataStorage.debug is true.
+			/* Fun story:
+			 * I had this if() statement as this:
+			 *     if(DataStorage.debug = true) {}
+			 * See the problem? It's the "=".
+			 * My IDE didn't have a problem with it, but running the command made the debug message show no matter what.
+			 * Anyway, I've fixed it now. :) */
 			sender.sendMessage("Player Yaw: " + String.valueOf(yaw));
 		}
 		
@@ -56,22 +77,22 @@ public class Thisway implements CommandExecutor {
 			// I don't know _exactly_ what this does, it's some mathematical function from the Bukkit forums though - and it works. ;)
 		}
 		if(yaw >= 315 || yaw < 45) {
-			if(DataStorage.debug = true) {
+			if(DataStorage.debug == true) {
 				sender.sendMessage("Player Facing: SOUTH");
 			}
 			DataStorage.facing = "SOUTH"; // I really love the DataStorage class, it's so neat!
 		} else if(yaw < 135) {
-			if(DataStorage.debug = true) {
+			if(DataStorage.debug == true) {
 				sender.sendMessage("Player Facing: WEST");
 			}
 			DataStorage.facing = "WEST";
 		} else if(yaw < 225) {
-			if(DataStorage.debug = true) {
+			if(DataStorage.debug == true) {
 				sender.sendMessage("Player Facing: NORTH");
 			}
 			DataStorage.facing = "NORTH";
 		} else if(yaw < 315) {
-			if(DataStorage.debug = true) {
+			if(DataStorage.debug == true) {
 				sender.sendMessage("Player Facing: EAST");
 			}
 			DataStorage.facing = "EAST";
@@ -84,7 +105,7 @@ public class Thisway implements CommandExecutor {
 		int playerX = location.getBlockX();
 		int playerY = location.getBlockY();
 		int playerZ = location.getBlockZ();
-		if(DataStorage.debug = true) {
+		if(DataStorage.debug == true) {
 			sender.sendMessage("Player Position: " + playerX + ", " + playerY + ", " + playerZ); // Simple debug for what coordinates it's looking at.
 		}
 		
@@ -116,7 +137,7 @@ public class Thisway implements CommandExecutor {
 		 * If Bukkit _does_ use the same TP system as that, and _also_ has that bug; I'll need to make a modified Y which TPs you up 0.2 (Or whatever height difference it actually is) blocks each time you use the command,
 		 * thus compensating for the height you descend whilst TPing. */
 		int playerModifiedZ = playerZ + DataStorage.zModDistance;
-		if(DataStorage.debug = true) {
+		if(DataStorage.debug == true) {
 			sender.sendMessage("New Player Position (To TP to): " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ);
 		}
 		
@@ -124,7 +145,7 @@ public class Thisway implements CommandExecutor {
 		
 		// This bit actaully TPs the player!
 		String worldName = player.getLocation().getWorld().getName(); // Bloody complicated to just get the world name as a string, innit?
-		if(DataStorage.debug = true) {
+		if(DataStorage.debug == true) {
 			sender.sendMessage("Current World: " + worldName);
 		}
 		/* I get the world name in case the current world isn't called "world",
