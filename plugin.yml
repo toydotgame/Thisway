@@ -1,0 +1,11 @@
+name: Thisway
+main: io.github.Toydotgame.Main
+version: 0.0.1
+description: Teleports the player in the direction they're facing.
+author: Toydotgam
+prefix: thisway
+commands:
+   thisway:
+      description: Teleport the player a select amount of blocks in the direction they're facing.
+      aliases: tw
+      usage: "Usage: /<command> <distance>"
