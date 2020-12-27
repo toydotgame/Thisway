@@ -12,164 +12,80 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements CommandExecutor {
 	@Override
 	public void onEnable() {
-		// I don't think I need anything here?
+		
 	}
 	
 	@Override
 	public void onDisable() {
-		// No.
+		
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(sender instanceof Player) { // Checks that the command was sent by a player.
-			if(args.length == 1) { // If there's only _one_ argument; check that: args[0] is all digits, nothing else; args[0] is _not_ 0.
+		if(sender instanceof Player) {
+			if(args.length == 1) {
 				if(args[0].matches("^[0-9]*$") && args[0] != "0") {
-					DataStorage.debug = false;
 					thisway(sender, args);
 					return true;
 				} else {
 					sender.sendMessage(ChatColor.RED + "Invalid argument!");
 					return false;
 				}
-			} else if(args.length == 2) { // If there's _two_ arguments:
-				if(args[1].equalsIgnoreCase("true")) { // If the second argument is "true':
-					if(args[0].matches("^[0-9]*$") && args[0] != "0") { // If the first argument is an accepted number.
-						DataStorage.debug = true;
-						sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
-						thisway(sender, args);
-						sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
-						return true;
-					} else {
-						sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
-						return false;
-					} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. Ends arg 1 number check.
-				} else if(args[1].equalsIgnoreCase("false")) { // If arg 2 is "false":
-					if(args[0].matches("^[0-9]*$") && args[0] != "0") { // Number validity check like before.
-						DataStorage.debug = false;
-						thisway(sender, args);
-						return true;
-					} else {
-						sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
-						return false;
-					} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. (Number validity check)
-				} else {
-					sender.sendMessage(ChatColor.RED + "Invalid second argument!");
-					return false;
-				} // Ends `if(args[1] == "true")` or `else if(args[1] == "false")`. (Debug toggle argument)
-			} else { // If arguments are invalid, run:
-				sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
+			} else {
+				sender.sendMessage(ChatColor.RED + "Invalid arguments!");
 				return false;
-			} // Ends `if(args.length == 2 && args[1] == "true") {}`. Ends _debug = true_ check if there's two arguments. Also ends the other checks about arguments (First level of checks, that is!).
-		} else { // Else statement for: `if(sender instanceof Player) {}`
-			// If sender is not player, run:
-			System.out.print("[Thisway] Only players can use this command!");
+			}
+		} else {
+			System.out.print("[Thisway] Players only!");
 			return false;
-		} // Ends `if(sender instanceof Player) {}`. Ends _player is sender_ check.
-	} // Ends `public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {}`. Ends main method (onCommand()).
-	
-	public void thisway(CommandSender sender, String[] args) { // Most likely needed to keep onCommand() method simple and prevent two copies of the code from being needed in one class.
-		Player player = (Player) sender;
-		
-		// This detects which way the player is facing:
-		float yaw = player.getEyeLocation().getYaw();
-		if(DataStorage.debug == true) { // You'll see these a bunch, they determine if they should send debug stats judged by if DataStorage.debug is true.
-			/* Fun story:
-			 * I had this if() statement as this:
-			 *     if(DataStorage.debug = true) {}
-			 * See the problem? It's the "=".
-			 * My IDE didn't have a problem with it, but running the command made the debug message show no matter what.
-			 * Anyway, I've fixed it now. :) */
-			sender.sendMessage("Player Yaw: " + String.valueOf(yaw));
 		}
+	}
+	
+	public void thisway(CommandSender sender, String[] args) {
+		Player p = (Player) sender;
+		
+		float yaw = p.getEyeLocation().getYaw();
 		
 		if(yaw < 0) {
 			yaw += 360;
-			// I don't know _exactly_ what this does, it's some mathematical function from the Bukkit forums though - and it works. ;)
 		}
 		if(yaw >= 315 || yaw < 45) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: SOUTH");
-			}
-			DataStorage.facing = "SOUTH"; // I really love the DataStorage class, it's so neat!
+			DataStorage.f = 0;
 		} else if(yaw < 135) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: WEST");
-			}
-			DataStorage.facing = "WEST";
+			DataStorage.f = 1;
 		} else if(yaw < 225) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: NORTH");
-			}
-			DataStorage.facing = "NORTH";
+			DataStorage.f = 2;
 		} else if(yaw < 315) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: EAST");
-			}
-			DataStorage.facing = "EAST";
+			DataStorage.f = 3;
+		}
+
+		Location loc = p.getLocation();
+		int x = loc.getBlockX();
+		int y = loc.getBlockY();
+		int z = loc.getBlockZ();
+		
+		if(DataStorage.f == 2) {
+			DataStorage.xMod = 0;
+			DataStorage.zMod = Integer.parseInt("-" + args[0]);
+		} else if(DataStorage.f == 0) {
+			DataStorage.xMod = 0;
+			DataStorage.zMod = Integer.parseInt(args[0]);
+		} else if(DataStorage.f == 3) {
+			DataStorage.xMod = Integer.parseInt(args[0]);
+			DataStorage.zMod = 0;
+		} else if(DataStorage.f == 1) {
+			DataStorage.xMod = Integer.parseInt("-" + args[0]);
+			DataStorage.zMod = 0;
 		}
 		
-		
-		
-		// _This_ detects the player's coordinates!:
-		Location location = player.getLocation();
-		int playerX = location.getBlockX();
-		int playerY = location.getBlockY();
-		int playerZ = location.getBlockZ();
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Position: " + playerX + ", " + playerY + ", " + playerZ); // Simple debug for what coordinates it's looking at.
-		}
-		
-		
-		
-		// This gets the coordinates it needs to TP to:
-		if(DataStorage.facing == "NORTH") {
-			// North in Minecraft is on the -Z axis. I'll modify the coordinates as such!
-			DataStorage.xModDistance = 0;
-			DataStorage.zModDistance = Integer.parseInt("-" + args[0]);
-		} else if(DataStorage.facing == "SOUTH") {
-			// South is +Z in-game.
-			DataStorage.xModDistance = 0;
-			DataStorage.zModDistance = Integer.parseInt(args[0]);
-		} else if(DataStorage.facing == "EAST") {
-			// East is +X.
-			DataStorage.xModDistance = Integer.parseInt(args[0]);
-			DataStorage.zModDistance = 0;
-		} else if(DataStorage.facing == "WEST") {
-			// West is -X.
-			DataStorage.xModDistance = Integer.parseInt("-" + args[0]);
-			DataStorage.zModDistance = 0;
-		}
-		
-		int playerModifiedX = playerX + DataStorage.xModDistance;
-		/* I hopefully shouldn't _need_ to modify the Y; both due to the plugin being for horizontal teleportation, not vertical - and I'm hoping Bukkit/Spigot uses a different teleportation system than Minecraft 1.6:
-		 * In vanilla Minecraft [1.6], when you TP - say - 100 blocks ahead: `/tp @p ~100 ~ ~`
-		 * ...and you spam that command in, after a few goes, you'll start going down into the ground.
-		 * If Bukkit _does_ use the same TP system as that, and _also_ has that bug; I'll need to make a modified Y which TPs you up 0.2 (Or whatever height difference it actually is) blocks each time you use the command,
-		 * thus compensating for the height you descend whilst TPing. */
-		int playerModifiedZ = playerZ + DataStorage.zModDistance;
-		if(DataStorage.debug == true) {
-			sender.sendMessage("New Player Position (To TP to): " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ);
-		}
-		
-		
-		
-		// This bit actaully TPs the player!
-		String worldName = player.getLocation().getWorld().getName(); // Bloody complicated to just get the world name as a string, innit?
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Current World: " + worldName);
-		}
-		/* I get the world name in case the current world isn't called "world",
-		 * or is the main world has a different name,
-		 * _or_ if the command is being used in a different dimension _or_ world;
-		 * due to plugins like Multiverse messing this up. */
-		
-		float pitch = player.getEyeLocation().getPitch();
-		// No need to get the yaw, I got it earlier using similar code.
-		
-		Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
-		player.teleport(newLocation);
-		
-		sender.sendMessage("Teleport successfull.");
+		int modX = x + DataStorage.xMod;
+		int modZ = z + DataStorage.zMod;
+
+		String dim = p.getLocation().getWorld().getName();
+
+		float rot = p.getEyeLocation().getPitch();
+
+		Location nLoc = new Location(Bukkit.getWorld(dim), modX, y, modZ, yaw, rot);
+		p.teleport(nLoc);
 	}
 }
