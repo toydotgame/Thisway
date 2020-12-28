@@ -1,3 +1,6 @@
+# Thisway
+A simple teleportation plugin for Spigot servers on 1.6.4.
+
 Downloads | ![GitHub all releases](https://img.shields.io/github/downloads/Toydotgame/Thisway/total?color=blue&label=GitHub%20-%20Total%20Downloads) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/Toydotgame/Thisway/latest/total?color=blue&label=GitHub%20-%20Latest%20Version%20Downloads) ![Spiget Downloads](https://img.shields.io/spiget/downloads/87115?color=blue&label=Spigot%20-%20Total%20Downloads)
 ---- | ----
 **Issues** | ![GitHub issues](https://img.shields.io/github/issues-raw/Toydotgame/Thisway?color=red&label=Open%20Issues) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/Toydotgame/Thisway?color=green&label=Closed%20Issues)
@@ -5,9 +8,7 @@ Downloads | ![GitHub all releases](https://img.shields.io/github/downloads/Toydo
 **Versions** | ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Toydotgame/Thisway?color=blue&label=Github%20-%20Latest%20%28Stable%20Only%29) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Toydotgame/Thisway?color=blue&include_prereleases&label=GitHub%20-%20Latest) ![Spiget Version](https://img.shields.io/spiget/version/87115?color=blue&label=Spigot%20-%20Latest)
 **Repo. Activity** | ![GitHub last commit](https://img.shields.io/github/last-commit/Toydotgame/Thisway?color=blue&label=Latest%20Commit) ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Toydotgame/Thisway/latest?color=blue&label=Commits%20Since%20Last%20Stable%20Release) ![GitHub commits since latest release (by date including pre-releases)](https://img.shields.io/github/commits-since/Toydotgame/Thisway/latest?color=blue&include_prereleases&label=Commits%20Since%20Latest%20Release%20%28Including%20Unstable%29)
 **Spigot Support** | ![Spigot Version](https://img.shields.io/badge/Minecraft%20Spigot%20Server%20Version-r1.6.4-blue)
-
-# Thisway
-A simple teleportation plugin for Spigot servers on 1.6.4.
+**Repo. Popularity** | ![GitHub forks](https://img.shields.io/github/forks/Toydotgame/Thisway?color=blue&label=Forks) ![GitHub Repo stars](https://img.shields.io/github/stars/Toydotgame/Thisway?color=blue&label=Stars&style=flat)
 
 ## Usage
 ```
@@ -78,8 +79,22 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 ### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
 
 ## To-Do
-* Make `/thisway` \[and `/tw`\] operator-only. Sorry!
 * Test if spamming the command makes the player's Y go down like you would get using vanilla commands. (e.g: `/tp @p ~100 ~ ~`)
 	* More info in issue [#1](https://github.com/Toydotgame/Thisway/issues/1).
-* Make a check that the player's future head position is an air block, if not print an error message.
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
+* Address issue [#3](https://github.com/Toydotgame/Thisway/issues/3).
+* Make coordinate info present in server log.
+
+## Changelog
+### Update 1.0.1
+* Fixed versioning error in `plugin.yml`.
+* Cleaned up code.
+    * Seperate method for main command actions, leaving the main method in the class to be for syntax error checking.
+
+### Update 1.0
+* Added main set of features:
+    * Basic teleporting.
+    * Both `/thisway` and `/tw` commands.
+    * Debug Mode.
+    * Multi world support.
+    * Seperate data storage class.
