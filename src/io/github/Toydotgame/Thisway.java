@@ -142,13 +142,13 @@ public class Thisway implements CommandExecutor {
 			DataStorage.zModDistance = 0;
 		}
 		
-		int playerModifiedX = playerX + DataStorage.xModDistance;
+		double playerModifiedX = playerX + DataStorage.xModDistance + 0.5;
 		/* I hopefully shouldn't _need_ to modify the Y; both due to the plugin being for horizontal teleportation, not vertical - and I'm hoping Bukkit/Spigot uses a different teleportation system than Minecraft 1.6:
 		 * In vanilla Minecraft [1.6], when you TP - say - 100 blocks ahead: `/tp @p ~100 ~ ~`
 		 * ...and you spam that command in, after a few goes, you'll start going down into the ground.
 		 * If Bukkit _does_ use the same TP system as that, and _also_ has that bug; I'll need to make a modified Y which TPs you up 0.2 (Or whatever height difference it actually is) blocks each time you use the command,
 		 * thus compensating for the height you descend whilst TPing. */
-		int playerModifiedZ = playerZ + DataStorage.zModDistance;
+		double playerModifiedZ = playerZ + DataStorage.zModDistance + 0.5;
 		if(DataStorage.debug == true) {
 			sender.sendMessage("New Player Position (To TP to): " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ);
 		}
