@@ -73,3 +73,4 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 * Make `/thisway` \[and `/tw`\] operator-only. Sorry!
 * Test if spamming the command makes the player's Y go down like you would get using vanilla commands. (e.g: `/tp @p ~100 ~ ~`)
 	* More info in issue [#1](https://github.com/Toydotgame/Thisway/issues/1).
+* Make a check that the player's future head position is an air block, if not print an error message.
