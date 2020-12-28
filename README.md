@@ -66,8 +66,8 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 5. Set the export location for the JAR to you server's directory (I'm using `/` in this case), then the plugin directory; i.e: `/plugins/Thisway.jar`.
 6. Click _Finish_.
 
-### Looking for a faster and smaller version of Thisway?
-#### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
+## Looking for a faster and smaller version of Thisway?
+### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
 
 ## To-Do
 * Make `/thisway` \[and `/tw`\] operator-only. Sorry!
