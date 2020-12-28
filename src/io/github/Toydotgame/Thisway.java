@@ -25,37 +25,42 @@ public class Thisway implements CommandExecutor {
 						return false;
 					}
 				} else if(args.length == 2) { // If there's _two_ arguments:
-					if(args[1].equalsIgnoreCase("true")) { // If the second argument is "true':
-						if(args[0].matches("^[0-9]*$") && args[0] != "0") { // If the first argument is an accepted number.
-							DataStorage.debug = true;
-							sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
-							thisway(sender, args);
-							sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
-							return true;
+					if(playerSender.hasPermission("thisway.debug") == true) {
+						if(args[1].equalsIgnoreCase("true")) { // If the second argument is "true':
+							if(args[0].matches("^[0-9]*$") && args[0] != "0") { // If the first argument is an accepted number.
+								DataStorage.debug = true;
+								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
+								thisway(sender, args);
+								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
+								return true;
+							} else {
+								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
+								return false;
+							} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. Ends arg 1 number check.
+						} else if(args[1].equalsIgnoreCase("false")) { // If arg 2 is "false":
+							if(args[0].matches("^[0-9]*$") && args[0] != "0") { // Number validity check like before.
+								DataStorage.debug = false;
+								thisway(sender, args);
+								return true;
+							} else {
+								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
+								return false;
+							} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. (Number validity check)
 						} else {
-							sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
+							sender.sendMessage(ChatColor.RED + "Invalid second argument!");
 							return false;
-						} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. Ends arg 1 number check.
-					} else if(args[1].equalsIgnoreCase("false")) { // If arg 2 is "false":
-						if(args[0].matches("^[0-9]*$") && args[0] != "0") { // Number validity check like before.
-							DataStorage.debug = false;
-							thisway(sender, args);
-							return true;
-						} else {
-							sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
-							return false;
-						} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. (Number validity check)
-					} else {
-						sender.sendMessage(ChatColor.RED + "Invalid second argument!");
-						return false;
-					} // Ends `if(args[1] == "true")` or `else if(args[1] == "false")`. (Debug toggle argument)
+						} // Ends `if(args[1] == "true")` or `else if(args[1] == "false")`. (Debug toggle argument)
+					} else { // If they don't have the thisway.debug permission:
+						sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use Debug Mode!");
+						return true; // Permission errors alway return true.
+					}
 				} else { // If arguments are invalid, run:
 					sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
 					return false;
 				} // Ends `if(args.length == 2 && args[1] == "true") {}`. Ends _debug = true_ check if there's two arguments. Also ends the other checks about arguments (First level of checks, that is!).
 			} else {// If the sender does not have thisway.use:
 				sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use this command!");
-				return true;
+				return true; // Perms return true, always; whether there's an error or not.
 			} // Ends permission check for thisway.use.
 		} else { // Else statement for: `if(sender instanceof Player) {}`
 			// If sender is not player, run:
