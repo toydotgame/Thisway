@@ -66,8 +66,10 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 5. Set the export location for the JAR to you server's directory (I'm using `/` in this case), then the plugin directory; i.e: `/plugins/Thisway.jar`.
 6. Click _Finish_.
 
+### Looking for a faster and smaller version of Thisway?
+#### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
+
 ## To-Do
-* Test permissions for the `/thisway` (and `/tw`) command.
+* Make `/thisway` \[and `/tw`\] operator-only. Sorry!
 * Test if spamming the command makes the player's Y go down like you would get using vanilla commands. (e.g: `/tp @p ~100 ~ ~`)
 	* More info in issue [#1](https://github.com/Toydotgame/Thisway/issues/1).
-* Make a fork of this plugin with comments removed, and code trimmed as much as I can get it; making a slightly speedier and light-weight version.
