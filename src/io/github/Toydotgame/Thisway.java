@@ -174,7 +174,7 @@ public class Thisway implements CommandExecutor {
 		// This bit _should_ check that the player's new location is air:
 		int playerNewHeadY = playerY + 1;
 		Location newHeadLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerNewHeadY, playerModifiedZ, yaw, pitch); // These coordinates are where the head _will_ be. I need to check to make sure they don't suffocate!
-		newHeadLocation.getBlock().getType;
+		newHeadLocation.getBlock().getType();
 		if(DataStorage.debug == true) {
 			sender.sendMessage("New Player Head Location Block Type: " + newHeadLocation.getBlock());
 			sender.sendMessage("New Player Head Location Block Type: " + newHeadLocation.getBlock().getType());
