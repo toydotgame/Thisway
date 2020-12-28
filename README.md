@@ -1,3 +1,11 @@
+Downloads | ![GitHub all releases](https://img.shields.io/github/downloads/Toydotgame/Thisway/total?color=blue&label=GitHub%20-%20Total%20Downloads) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/Toydotgame/Thisway/latest/total?color=blue&label=GitHub%20-%20Latest%20Version%20Downloads) ![Spiget Downloads](https://img.shields.io/spiget/downloads/87115?color=blue&label=Spigot%20-%20Total%20Downloads)
+---- | ----
+**Issues** | ![GitHub issues](https://img.shields.io/github/issues-raw/Toydotgame/Thisway?color=red&label=Open%20Issues) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/Toydotgame/Thisway?color=green&label=Closed%20Issues)
+**Pulls** | ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/Toydotgame/Thisway?color=blue&label=Open%20Pull%20Requests) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/Toydotgame/Thisway?color=blue&label=Closed%20Pull%20Requests)
+**Versions** | ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Toydotgame/Thisway?color=blue&label=Github%20-%20Latest%20%28Stable%20Only%29) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Toydotgame/Thisway?color=blue&include_prereleases&label=GitHub%20-%20Latest) ![Spiget Version](https://img.shields.io/spiget/version/87115?color=blue&label=Spigot%20-%20Latest)
+**Repo. Activity** | ![GitHub last commit](https://img.shields.io/github/last-commit/Toydotgame/Thisway?color=blue&label=Latest%20Commit) ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Toydotgame/Thisway/latest?color=blue&label=Commits%20Since%20Last%20Stable%20Release) ![GitHub commits since latest release (by date including pre-releases)](https://img.shields.io/github/commits-since/Toydotgame/Thisway/latest?color=blue&include_prereleases&label=Commits%20Since%20Latest%20Release%20%28Including%20Unstable%29)
+**Spigot Support** | ![Spigot Version](https://img.shields.io/badge/Minecraft%20Spigot%20Server%20Version-r1.6.4-blue)
+
 # Thisway
 A simple teleportation plugin for Spigot servers on 1.6.4.
 
