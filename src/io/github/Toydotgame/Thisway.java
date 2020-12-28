@@ -3,6 +3,7 @@ package io.github.Toydotgame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -143,7 +144,8 @@ public class Thisway implements CommandExecutor {
 		
 		
 		
-		// This bit actaully TPs the player!
+		// This doesn't belong anywhere, but it needs to be above the new head blocktype tester.
+		// All this does is get the world name and player's pitch.
 		String worldName = player.getLocation().getWorld().getName(); // Bloody complicated to just get the world name as a string, innit?
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Current World: " + worldName);
@@ -156,9 +158,25 @@ public class Thisway implements CommandExecutor {
 		float pitch = player.getEyeLocation().getPitch();
 		// No need to get the yaw, I got it earlier using similar code.
 		
-		Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
-		player.teleport(newLocation);
 		
-		sender.sendMessage("Teleport successfull.");
+		
+		// This bit _should_ check that the player's new location is air:
+		int playerNewHeadY = playerY + 1;
+		Location newHeadLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerNewHeadY, playerModifiedZ, yaw, pitch); // These coordinates are where the head _will_ be. I need to check to make sure they don't suffocate!
+		newHeadLocation.getBlock();
+		if(DataStorage.debug == true) {
+			sender.sendMessage("New Player Head Location Block Type: " + newHeadLocation.getBlock());
+			sender.sendMessage("New Player Head Location Block Type: " + newHeadLocation.getBlock().getType());
+		}
+		
+		if(newHeadLocation.getBlock().getType() == Material.AIR || newHeadLocation.getBlock().getType() == Material.BROWN_MUSHROOM || newHeadLocation.getBlock().getType() == Material.CARPET || newHeadLocation.getBlock().getType() == Material.COCOA || newHeadLocation.getBlock().getType() == Material.CROPS || newHeadLocation.getBlock().getType() == Material.DEAD_BUSH || newHeadLocation.getBlock().getType() == Material.DETECTOR_RAIL || newHeadLocation.getBlock().getType() == Material.DIODE_BLOCK_OFF || newHeadLocation.getBlock().getType() == Material.DIODE_BLOCK_ON || newHeadLocation.getBlock().getType() == Material.FIRE || newHeadLocation.getBlock().getType() == Material.FLOWER_POT || newHeadLocation.getBlock().getType() == Material.LADDER || newHeadLocation.getBlock().getType() == Material.LAVA || newHeadLocation.getBlock().getType() == Material.LEAVES || newHeadLocation.getBlock().getType() == Material.LEVER || newHeadLocation.getBlock().getType() == Material.MELON_STEM || newHeadLocation.getBlock().getType() == Material.PAINTING || newHeadLocation.getBlock().getType() == Material.PORTAL || newHeadLocation.getBlock().getType() == Material.POWERED_RAIL || newHeadLocation.getBlock().getType() == Material.PUMPKIN_STEM || newHeadLocation.getBlock().getType() == Material.RAILS || newHeadLocation.getBlock().getType() == Material.RED_MUSHROOM || newHeadLocation.getBlock().getType() == Material.RED_ROSE || newHeadLocation.getBlock().getType() == Material.REDSTONE_COMPARATOR_OFF || newHeadLocation.getBlock().getType() == Material.REDSTONE_COMPARATOR_ON || newHeadLocation.getBlock().getType() == Material.REDSTONE_TORCH_OFF || newHeadLocation.getBlock().getType() == Material.REDSTONE_TORCH_ON || newHeadLocation.getBlock().getType() == Material.REDSTONE_WIRE || newHeadLocation.getBlock().getType() == Material.SAPLING || newHeadLocation.getBlock().getType() == Material.SIGN_POST || newHeadLocation.getBlock().getType() == Material.SKULL || newHeadLocation.getBlock().getType() == Material.SNOW || newHeadLocation.getBlock().getType() == Material.STATIONARY_LAVA || newHeadLocation.getBlock().getType() == Material.STATIONARY_WATER || newHeadLocation.getBlock().getType() == Material.WATER || newHeadLocation.getBlock().getType() == Material.WOOD_PLATE || newHeadLocation.getBlock().getType() == Material.STRING || newHeadLocation.getBlock().getType() == Material.TORCH || newHeadLocation.getBlock().getType() == Material.VINE /* Vine is dead! */ || newHeadLocation.getBlock().getType() == Material.WALL_SIGN || newHeadLocation.getBlock().getType() == Material.WATER_LILY || newHeadLocation.getBlock().getType() == Material.WEB || newHeadLocation.getBlock().getType() == Material.WOODEN_DOOR || newHeadLocation.getBlock().getType() == Material.IRON_DOOR || newHeadLocation.getBlock().getType() == Material.YELLOW_FLOWER || newHeadLocation.getBlock().getType() == Material.TRAP_DOOR) { // _Massive_ transparent block check for blocks with no collision box.
+			// This bit actaully TPs the player!		
+			Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
+			player.teleport(newLocation);
+			
+			sender.sendMessage("Teleport successfull.");
+		} else { // If the new head location _isn't_ air:
+			sender.sendMessage(ChatColor.RED + "New location is inside a block! Try again.");
+		}
 	} // Ends `public void thisway() {}`. Ends thisway() method.
 } // Ends `public class Thisway implements CommandExecutor {}`. Ends class.
