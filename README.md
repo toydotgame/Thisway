@@ -83,3 +83,4 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 	* More info in issue [#1](https://github.com/Toydotgame/Thisway/issues/1).
 * Make a check that the player's future head position is an air block, if not print an error message.
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
+* Address issue [#2]().
