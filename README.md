@@ -78,9 +78,22 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 ### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
 
 ## To-Do
-* Make `/thisway` \[and `/tw`\] operator-only. Sorry!
 * Test if spamming the command makes the player's Y go down like you would get using vanilla commands. (e.g: `/tp @p ~100 ~ ~`)
 	* More info in issue [#1](https://github.com/Toydotgame/Thisway/issues/1).
-* Make a check that the player's future head position is an air block, if not print an error message.
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
 * Address issue [#3](https://github.com/Toydotgame/Thisway/issues/3).
+* Make coordinate info present in server log.
+
+## Changelog
+### Update 1.0.1
+* Fixed versioning error in `plugin.yml`.
+* Cleaned up code.
+    * Seperate method for main command actions, leaving the main method in the class to be for syntax error checking.
+
+### Update 1.0
+* Added main set of features:
+    * Basic teleporting.
+    * Both `/thisway` and `/tw` commands.
+    * Debug Mode.
+    * Multi world support.
+    * Seperate data storage class.
