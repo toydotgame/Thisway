@@ -94,6 +94,8 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 
 ## To-Do
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
+* Move pitch getter to be right after yaw.
+    * Make pitch be in debug output.
 
 ## Changelog
 ### Update 1.0.1
