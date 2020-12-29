@@ -90,8 +90,6 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 ### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
 
 ## To-Do
-* Test if spamming the command makes the player's Y go down like you would get using vanilla commands. (e.g: `/tp @p ~100 ~ ~`)
-	* More info in issue [#1](https://github.com/Toydotgame/Thisway/issues/1).
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
 * Make a glass block get placed over air if the new location ends with the player standing on air.
 
