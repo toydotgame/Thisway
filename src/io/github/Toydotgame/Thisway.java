@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 public class Thisway implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		Player playerSender = (Player) sender;
 		if(sender instanceof Player) { // Checks that the command was sent by a player.
+			Player playerSender = (Player) sender;
 			if(playerSender.hasPermission("thisway.use") == true) {
 				if(args.length == 1) { // If there's only _one_ argument; check that: args[0] is all digits, nothing else; args[0] is _not_ 0.
 					if(args[0].matches("^[0-9]*$") && args[0] != "0") {
