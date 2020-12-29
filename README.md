@@ -10,84 +10,13 @@ Downloads | ![GitHub all releases](https://img.shields.io/github/downloads/Toydo
 **Spigot Support** | ![Spigot Version](https://img.shields.io/badge/Minecraft%20Spigot%20Server%20Version-r1.6.4-blue)
 **Repo. Popularity** | ![GitHub forks](https://img.shields.io/github/forks/Toydotgame/Thisway?color=blue&label=Forks) ![GitHub Repo stars](https://img.shields.io/github/stars/Toydotgame/Thisway?color=blue&label=Stars&style=flat)
 
-## Usage
-```
-/thisway <distance> [true/false]
-```
-* You can use `/tw` in place of `/thisway` for convenience and speed.
-* `<distance>` is how far you'd like to go \[in blocks\].
-* The optional `[true/false]` is for Debug Mode. (More below)
-
-### Examples
-To teleport 100 blocks in front of you, use:
-```
-/thisway 100
-```
-
-To teleport 24 blocks ahead and know your location data:
-```
-/thisway 24 true
-```
-
-50-block-TP: (No debug)
-```
-/tw 50 false
-```
-Alternatively,
-```
-/thisway 50
-```
-
-You get it? It's that simple!
-
-### Debug Mode
-Debug mode will show your current and future positioning stats in chat for you; signalled with headers and footers:
-```
-=== THISWAY DEBUG START ===
-```
-```
-=== THISWAY DEBUG END ===
-```
-Like the plugin itself, Debug Mode is very simple. That's all it does.
-It _is_ useful when you find a bug or such, and you can repeat your actions with Debug Mode turned on to see where the plugin thinks you are.
-
-### Output
-Thisway is, by default, an operator-only plugin. If you think you have an op who shouldn't be one; this may help:
-Thisway will always print a very basic rundown of the teleport each time the command is run:
-```log
-[INFO] [Thisway] <playername> teleported <distance> blocks, from <x>, <y>, <z> to <newX>, <newY>, <newZ>.
-```
-This output mirrors `<distance>` from the original command sent:
-```mccmd
-/thisway <distance>
-```
+## [Usage](https://github.com/Toydotgame/Thisway/wiki/How-to-use-Thisway), [Features](https://github.com/Toydotgame/Thisway/wiki/Features-of-Thisway), [Building, Contributing](https://github.com/Toydotgame/Thisway/wiki/How-to-set-up-the-Source-Code-in-Your-Editor-and-Build), [Command Output](https://github.com/Toydotgame/Thisway/wiki/Outputs), and other Details
+All of the above can be found on the [wiki](https://github.com/Toydotgame/Thisway/wiki).
 
 ## Version
 Latest versions always come first to the [Releases](https://github.com/Toydotgame/Thisway/releases) tab.
 Versions use [Semantic Versioning](https://semver.org/).
 This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it to 1.12 or 1.16 or whatever you want. I like 1.6 for many reasons, and I want to help it by making more plugins for it; which is a big problem I've encoutered whilst playing this version.
-
-## Features
-* Basic teleportation using Bukkit's teleportation system.
-* Simple command format.
-* Basic positioning data using Debug Mode.
-* Multi dimension and world support.
-	* I use a special bit of code which gets the name of the command sender's current world, and puts _that_ into the Bukkit teleport script.
-	* This should allow for use in multiple dimensions, and
-	* \[hypothetical\] Multiverse support - or any other multi-world plugin you may use.
-* Basic console logging output.
-* Glass block gets placed under your feet at the new location if there's air there; to stop yu from falling if you're not flying _or_ you're in survival mode.
-* Tests that the block you're teleporting into is either air or a block that won't suffocate you.
-
-## Building
-You will need the Spigot 1.6.4 server JARfile, as that's what's used to create Spigot things; BuildTools and whatever else you use today didn't exist for those versions. Everything was integrated in `server.jar`.
-You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my examples, if you use other IDEs (IntelliJ or whatever): suffer. (Or just try to adapt these instructions to suit your IDE, your choice.
-1. Right-click the project and select _Export_.
-2. It will ask you what you want to export as; under the _Java_ folder in the list, choose _JAR file_. Do _not_ choose _Runnable JAR_! That will not work with Minecraft!
-3. Tick the box next to the _Thisway_ project on the left file list.
-4. On the right, deselect all of the project files except `plugin.yml`. Spigot needs this to know what commands to listen to and give help for it.
-5. Set the export location for the JAR to you server's directory (I'm using `/` in this case), then the plugin directory; i.e: `/plugins/Thisway.jar`.
-6. Click _Finish_.
 
 ## Looking for a faster and smaller version of Thisway?
 ### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
