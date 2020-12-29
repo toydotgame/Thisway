@@ -184,6 +184,7 @@ public class Thisway implements CommandExecutor {
 			player.teleport(newLocation);
 			
 			sender.sendMessage("Teleport successfull.");
+			System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
 		} else { // If the new head location _isn't_ air:
 			sender.sendMessage(ChatColor.RED + "New location is inside a block! Try again.");
 		}
