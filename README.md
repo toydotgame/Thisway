@@ -51,6 +51,17 @@ Debug mode will show your current and future positioning stats in chat for you; 
 Like the plugin itself, Debug Mode is very simple. That's all it does.
 It _is_ useful when you find a bug or such, and you can repeat your actions with Debug Mode turned on to see where the plugin thinks you are.
 
+### Output
+Thisway is, by default, an operator-only plugin. If you think you have an op who shouldn't be one; this may help:
+Thisway will always print a very basic rundown of the teleport each time the command is run:
+```log
+[INFO] [Thisway] <playername> teleported <distance> blocks, from <x>, <y>, <z> to <newX>, <newY>, <newZ>.
+```
+This output mirrors `<distance>` from the original command sent:
+```mccmd
+/thisway <distance>
+```
+
 ## Version
 Latest versions always come first to the [Releases](https://github.com/Toydotgame/Thisway/releases) tab.
 Versions use [Semantic Versioning](https://semver.org/).
