@@ -75,6 +75,9 @@ This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it t
 	* I use a special bit of code which gets the name of the command sender's current world, and puts _that_ into the Bukkit teleport script.
 	* This should allow for use in multiple dimensions, and
 	* \[hypothetical\] Multiverse support - or any other multi-world plugin you may use.
+* Basic console logging output.
+* Glass block gets placed under your feet at the new location if there's air there; to stop yu from falling if you're not flying _or_ you're in survival mode.
+* Tests that the block you're teleporting into is either air or a block that won't suffocate you.
 
 ## Building
 You will need the Spigot 1.6.4 server JARfile, as that's what's used to create Spigot things; BuildTools and whatever else you use today didn't exist for those versions. Everything was integrated in `server.jar`.
@@ -91,8 +94,6 @@ You'll also need the repo. set up in your IDE. I'm going to use Eclipse for my e
 
 ## To-Do
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
-* Make a glass block get placed over air if the new location ends with the player standing on air.
-
 
 ## Changelog
 ### Update 1.0.1
