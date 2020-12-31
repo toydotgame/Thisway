@@ -85,6 +85,11 @@ public class Thisway implements CommandExecutor {
 			sender.sendMessage("Player Yaw: " + String.valueOf(yaw));
 		}
 		
+		float pitch = player.getEyeLocation().getPitch(); // Used later during teleport script. It's only up here so that debug output has yaw and pitch next to each other.
+		if(DataStorage.debug == true) {
+			sender.sendMessage("Player Pitch: " + String.valueOf(pitch));
+		}
+		
 		if(yaw < 0) {
 			yaw += 360;
 			// I don't know _exactly_ what this does, it's some mathematical function from the Bukkit forums though - and it works. ;)
@@ -166,9 +171,6 @@ public class Thisway implements CommandExecutor {
 		 * or is the main world has a different name,
 		 * _or_ if the command is being used in a different dimension _or_ world;
 		 * due to plugins like Multiverse messing this up. */
-		
-		float pitch = player.getEyeLocation().getPitch();
-		// No need to get the yaw, I got it earlier using similar code.
 		
 		
 		
