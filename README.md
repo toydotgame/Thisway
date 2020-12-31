@@ -27,12 +27,21 @@ This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it t
     * Make pitch be in debug output.
 
 ## Changelog
-### Update 1.0.1
+### Release 1.1
+* Added a [suffocation detector](https://github.com/Toydotgame/Thisway/wiki/Thisway-Teleporting-Mechanics#tracking-of-players-head-into-a-block).
+* \[I\] made it so that a glass block replaces air if your new location is in midair.
+
+### Release 1.0.1
 * Fixed versioning error in `plugin.yml`.
 * Cleaned up code.
     * Seperate method for main command actions, leaving the main method in the class to be for syntax error checking.
+* Fixed issue [#3](https://github.com/Toydotgame/Thisway/issues/3). (New location positioning error)
+* Added permission system:
+   * `thisway.use` - Allows use of `/thisway` \[and `/tw`\].
+   * `thisway.debug` - Allows use of Debug Mode. (`/thisway <distance> true`)
+   * Fixed bug where non-ops could use Thisway. Now `thisway.use` and `thisway.debug` are defaulted to op-only.
 
-### Update 1.0
+### Relase 1.0
 * Added main set of features:
     * Basic teleporting.
     * Both `/thisway` and `/tw` commands.
