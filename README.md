@@ -23,8 +23,6 @@ This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it t
 
 ## To-Do
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
-* Move pitch getter to be right after yaw.
-    * Make pitch be in debug output.
 
 ## Changelog
 ### Release 1.1
