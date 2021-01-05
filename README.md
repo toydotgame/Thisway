@@ -23,6 +23,10 @@ This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it t
 
 ## To-Do
 * Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
+* Add a config thing via commands.
+  * Currently, config is limited to per-player choice of if Debug Mode should be on by default, even when no `true` or `false` is passed in chat.
+    * Save file format will be: `./Thisway/playerconfigs/playername.yml` (`.yml` is because YAML is simple and cool. It doesn't really help inside the code)
+      * Example of format: `~/ICCMC/plugins/Thisway/playerconfigs/Toydotgam.yml`
 
 ## Changelog
 ### Release 1.1
