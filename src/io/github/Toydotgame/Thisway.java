@@ -193,7 +193,7 @@ public class Thisway implements CommandExecutor {
 				Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
 				player.teleport(newLocation);
 				
-				sender.sendMessage("Teleport successfull.");
+				sender.sendMessage("Teleport successful.");
 				System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
 			} else { // If the new location is safe to stand on:
 				// This bit actaully TPs the player!		
