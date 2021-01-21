@@ -17,16 +17,6 @@ Latest versions always come first to the [Releases](https://github.com/Toydotgam
 Versions use [Semantic Versioning](https://semver.org/).
 This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it to 1.12 or 1.16 or whatever you want. I like 1.6 for many reasons, and I want to help it by making more plugins for it; which is a big problem I've encoutered whilst playing this version.
 
-## Looking for a faster and smaller version of Thisway?
-### Try [Thisway Light](https://github.com/Toydotgame/Thisway-Light)!
-
-## To-Do
-* Check Bukkit support. If no support, consider making a fork of Thisway for Bukkit.
-* Add a config thing via commands.
-  * Currently, config is limited to per-player choice of if Debug Mode should be on by default, even when no `true` or `false` is passed in chat.
-    * Save file format will be: `./Thisway/playerconfigs/playername.yml` (`.yml` is because YAML is simple and cool. It doesn't really help inside the code)
-      * Example of format: `~/ICCMC/plugins/Thisway/playerconfigs/Toydotgam.yml`
-
 ## Changelog
 ### Release 1.1
 * Added a [suffocation detector](https://github.com/Toydotgame/Thisway/wiki/Thisway-Teleporting-Mechanics#tracking-of-players-head-into-a-block).
