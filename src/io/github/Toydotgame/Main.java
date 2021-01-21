@@ -9,7 +9,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-	private Main plugin;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
 	
@@ -28,7 +27,7 @@ public class Main extends JavaPlugin {
 		customConfigFile = new File(getDataFolder(), "config.yml");
 		if(!customConfigFile.exists()) {
 			customConfigFile.getParentFile().mkdirs(); // Creates parent directories.
-			plugin.saveResource("config.yml", false); // Creates config file.
+			saveResource("config.yml", false); // Creates config file.
 		}
 		
 		customConfig = new YamlConfiguration();
