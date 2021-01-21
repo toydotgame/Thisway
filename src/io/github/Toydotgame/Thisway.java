@@ -1,6 +1,9 @@
 package io.github.Toydotgame;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,14 +15,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Thisway implements CommandExecutor {
+	private Main plugin;
+	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
 		if(sender instanceof Player) { // Checks that the command was sent by a player.
 			Player playerSender = (Player) sender;
 			if(playerSender.hasPermission("thisway.use") == true) {
 				if(args.length == 1) { // If there's only _one_ argument; check that: args[0] is all digits, nothing else; args[0] is _not_ 0.
 					if(args[0].matches("^[0-9]*$") && args[0] != "0") {
-						DataStorage.debug = false;
+						String playername = sender.toString();
+						String playerDebugPreferenceString = plugin.getConfig().getString(playername);
+						plugin.getConfig().set(playername, false);
+						boolean playerDebugPreference = Boolean.parseBoolean(playerDebugPreferenceString);
+						DataStorage.debug = playerDebugPreference;
 						thisway(sender, args);
 						return true;
 					} else {
