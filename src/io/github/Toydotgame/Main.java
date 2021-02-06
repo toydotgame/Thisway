@@ -7,7 +7,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		this.getCommand("thisway").setExecutor(new Thisway());
 		
-		new UpdateChecker(this, 87115).getVersion(version -> {
+		new UpdateChecker(this, 87115).getVersion(version -> { // Huge thanks to the great code on the SpigotMC wiki: https://www.spigotmc.org/wiki/creating-an-update-checker-that-checks-for-updates/
 			if(this.getDescription().getVersion().equalsIgnoreCase(version)) {
 				System.out.print("[Thisway] Plugin successfully loaded.");
 			} else {
