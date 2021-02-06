@@ -55,6 +55,7 @@ public class DataStorage {
 			"WOODEN_DOOR",
 			"IRON_DOOR",
 			"YELLOW_FLOWER",
-			"TRAP_DOOR"
+			"TRAP_DOOR",
+			"LONG_GRASS"
 	};
 }

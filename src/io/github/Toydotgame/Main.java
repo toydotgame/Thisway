@@ -6,7 +6,14 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.getCommand("thisway").setExecutor(new Thisway());
-		System.out.print("[Thisway] Plugin successfully loaded.");
+		
+		new UpdateChecker(this, 87115).getVersion(version -> {
+			if(this.getDescription().getVersion().equalsIgnoreCase(version)) {
+				System.out.print("[Thisway] Plugin successfully loaded.");
+			} else {
+				System.out.print("[Thisway] Please update Thisway! (Plugin loaded anyway)");
+			}
+		});
 	}
 
 	@Override
