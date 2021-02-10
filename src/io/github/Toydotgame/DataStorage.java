@@ -4,6 +4,7 @@ package io.github.Toydotgame;
 
 public class DataStorage {
 	public static String version;
+	public static String serverVersion;
 	public static boolean isUpToDate;
 	
 	public static boolean debug;

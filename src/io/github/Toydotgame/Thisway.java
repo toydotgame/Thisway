@@ -33,6 +33,7 @@ public class Thisway implements CommandExecutor {
 								DataStorage.debug = true;
 								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
 								sender.sendMessage("Plugin version: " + DataStorage.version);
+								sender.sendMessage("Server's Latest Version: " + DataStorage.serverVersion);
 								if(DataStorage.isUpToDate == true) {
 									sender.sendMessage(ChatColor.GREEN + "Thisway is up-to-date.");
 								} else {
