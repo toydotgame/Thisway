@@ -20,8 +20,10 @@ public class Main extends JavaPlugin {
 			DataStorage.version = this.getDescription().getVersion();
 			
 			if(DataStorage.serverVersion.equals(DataStorage.version)) {
+				DataStorage.isUpToDate = true;
 				System.out.print("[Thisway] Plugin loaded successfully!");
 			} else {
+				DataStorage.isUpToDate = false;
 				System.out.print("[Thisway] Thisway is out-of-date or you are using a beta version of the plugin. If it's the former; I strongly suggest that you update in case of any potential bugs in your copy of the plugin.");
 				System.out.print("[Thisway] The plugin was loaded anyway.");
 			}
