@@ -1,6 +1,6 @@
 name: Thisway
 main: io.github.Toydotgame.Main
-version: 1.2.1
+version: 1.2.2
 description: Teleports the player in the direction they're facing.
 author: Toydotgam
 prefix: Thisway
