@@ -1,6 +1,9 @@
 # Thisway
 A simple teleportation plugin for Spigot servers on 1.6.4.
 
+**Note:** Due to Spigot's API, the latest stable version that I have released may say to you that it is not up to date. If you just downloaded it, you should be fine.
+If this issue persists for more than a day or you encounter problems, please look on SpigotMC for an update or open a new issue.
+
 <div align="center">
 	<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/toydotgame/Thisway/total">
 	<img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/toydotgame/Thisway?include_prereleases">
