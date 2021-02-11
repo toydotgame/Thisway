@@ -3,7 +3,6 @@
 
 # Eclipse build things
 /bin
-build.ant
 /.externalToolBuilders
 
 # Eclipse project files
