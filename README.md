@@ -18,6 +18,21 @@ Versions use [Semantic Versioning](https://semver.org/).
 This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it to 1.12 or 1.16 or whatever you want. I like 1.6 for many reasons, and I want to help it by making more plugins for it; which is a big problem I've encoutered whilst playing this version.
 
 ## Changelog
+### Release 1.2.1
+* Semi-crippled update checker to allow plugin to still operate if the plugin says it's out of date. A new update checker has been made and it will make it's way to a `rc` build.
+
+### Release 1.2
+#### Completely non-functional build, please use 1.2.1 if you want something close to 1.2.
+* Added update checker
+	* Console and Debug Mode outputs have been added.
+* Added player pitch to Debug Mode output.
+	* (I think this did exist before, but it's patched back in now)
+* Optimised suffocation detector
+* Players can teleport into grass too, it used to not be on the safe block list.
+* Stopped crashes when console users use Thisway
+* Optimised `DataStorage` class
+* Fixed typos in client-sided output
+
 ### Release 1.1
 * Added a [suffocation detector](https://github.com/Toydotgame/Thisway/wiki/Thisway-Teleporting-Mechanics#tracking-of-players-head-into-a-block).
 * \[I\] made it so that a glass block replaces air if your new location is in midair.
