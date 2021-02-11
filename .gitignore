@@ -1,8 +1,10 @@
 # Compiled class file
 *.class
 
-# Eclipse build directory
+# Eclipse build things
 /bin
+*.ant
+#/.externalBuilderTools
 
 # Eclipse project files
 .project
