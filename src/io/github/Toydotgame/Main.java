@@ -10,8 +10,6 @@ import me.robertlit.spigotresources.api.SpigotResourcesAPI;
 public class Main extends JavaPlugin {	
 	@Override
 	public void onEnable() {
-		System.out.println("asdfdsafdsaf");
-		
 		SpigotResourcesAPI api = new SpigotResourcesAPI(false);
 		
 		CompletableFuture<Resource> future = api.getResource(87115);
