@@ -37,7 +37,7 @@ public class Thisway implements CommandExecutor {
 								if(DataStorage.isUpToDate == true) {
 									sender.sendMessage(ChatColor.GREEN + "Thisway is up-to-date.");
 								} else {
-									sender.sendMessage(ChatColor.RED + "Thisway is not up-to-date!");
+									sender.sendMessage(ChatColor.RED + "Thisway is not up-to-date with the latest stable version!");
 								}
 								
 								thisway(sender, args);
