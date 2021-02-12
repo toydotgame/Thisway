@@ -5,7 +5,8 @@ A simple teleportation plugin for Spigot servers on 1.6.4.
 If this issue persists for more than a day or you encounter problems, please look on SpigotMC for an update or open a new issue.
 
 <div align="center">
-	<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/toydotgame/Thisway/total">
+	<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/toydotgame/Thisway/total?label=GitHub%20Downloads">
+	<img alt="Spiget Downloads" src="https://img.shields.io/spiget/downloads/87115?label=SpigotMC%20Downloads"><br>
 	<img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/toydotgame/Thisway?include_prereleases">
 	<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/toydotgame/Thisway"><br> <!-- I put a `<br>` because I wanted the repo. social details a bit more seperate. -->
 	<img alt="GitHub forks" src="https://img.shields.io/github/forks/toydotgame/Thisway">
