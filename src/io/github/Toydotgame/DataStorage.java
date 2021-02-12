@@ -4,7 +4,6 @@ package io.github.Toydotgame;
 
 public class DataStorage {
 	public static String localVersion;
-	public static String serverVersion;
 
 	public static boolean debug;
 	public static String facing;
