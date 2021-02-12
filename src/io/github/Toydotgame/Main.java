@@ -14,14 +14,12 @@ public class Main extends JavaPlugin {
 		
 		CompletableFuture<Resource> future = api.getResource(87115);
 		future.thenAccept(resource -> {
+			DataStorage.localVersion = this.getDescription().getVersion();
 			DataStorage.serverVersion = resource.getVersion();
-			DataStorage.version = this.getDescription().getVersion();
 			
-			if(DataStorage.serverVersion.equals(DataStorage.version)) {
-				DataStorage.isUpToDate = true;
+			if(this.getDescription().getVersion().equals(resource.getVersion())) { // if(localVersion == serverVersion) {}
 				System.out.print("[Thisway] Plugin loaded successfully!");
 			} else {
-				DataStorage.isUpToDate = false;
 				System.out.print("[Thisway] Thisway is out-of-date or you are using a beta version of the plugin. If it's the former; I strongly suggest that you update in case of any potential bugs in your copy of the plugin.");
 				System.out.print("[Thisway] The plugin was loaded anyway.");
 			}

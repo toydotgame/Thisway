@@ -3,10 +3,9 @@ package io.github.Toydotgame;
 // Ah, so simple, yet so helpful.
 
 public class DataStorage {
-	public static String version;
+	public static String localVersion;
 	public static String serverVersion;
-	public static boolean isUpToDate;
-	
+
 	public static boolean debug;
 	public static String facing;
 	

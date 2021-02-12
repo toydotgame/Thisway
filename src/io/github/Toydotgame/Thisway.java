@@ -32,14 +32,15 @@ public class Thisway implements CommandExecutor {
 							if(args[0].matches("^[0-9]*$") && args[0] != "0") { // If the first argument is an accepted number.
 								DataStorage.debug = true;
 								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
-								sender.sendMessage("Plugin version: " + DataStorage.version);
-								sender.sendMessage("Server's Latest Version: " + DataStorage.serverVersion);
-								if(DataStorage.isUpToDate == true) {
+								
+								sender.sendMessage("Plugin version: " + DataStorage.localVersion);
+								sender.sendMessage("Latest Version: " + DataStorage.serverVersion);
+								if(DataStorage.localVersion.equals(DataStorage.serverVersion)) {
 									sender.sendMessage(ChatColor.GREEN + "Thisway is up-to-date.");
 								} else {
 									sender.sendMessage(ChatColor.RED + "Thisway is not up-to-date with the latest stable version!");
 								}
-								
+
 								thisway(sender, args);
 								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
 								return true;
