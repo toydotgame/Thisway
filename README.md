@@ -1,5 +1,5 @@
 # Thisway
-A simple teleportation plugin for Spigot servers on 1.6.4.
+A simple teleportation plugin for Spigot servers on 1.6.4. Due to it's simplicity it will most likely work with Bukkit as that's all it uses internally.
 
 **Note:** Due to Spigot's API, the latest stable version that I have released may say to you that it is not up to date. If you just downloaded it, you should be fine.
 If this issue persists for more than a day or you encounter problems, please look on SpigotMC for an update or open a new issue.
