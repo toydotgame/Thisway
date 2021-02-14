@@ -1,8 +1,5 @@
 # Thisway
-A simple teleportation plugin for Spigot servers on 1.6.4. Due to it's simplicity it will most likely work with Bukkit as that's all it uses internally.
-
-**Note:** Due to Spigot's API, the latest stable version that I have released may say to you that it is not up to date. If you just downloaded it, you should be fine.
-If this issue persists for more than a day or you encounter problems, please look on SpigotMC for an update or open a new issue.
+A simple teleportation plugin for Spigot servers on 1.6.4. Due to it's simplicity it will most likely work with Bukkit as it only imports `org.bukkit.*` (no trace of `org.spigot.*`) internally.
 
 <div align="center">
 	<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/toydotgame/Thisway/total?label=GitHub%20Downloads">
@@ -22,6 +19,9 @@ Versions use [Semantic Versioning](https://semver.org/).
 This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it to 1.12 or 1.16 or whatever you want. I like 1.6 for many reasons, and I want to help it by making more plugins for it; which is a big problem I've encoutered whilst playing this version.
 
 ## Changelog
+### Release 1.2.3
+* Removed update checker, it sucked
+
 ### Release 1.2.2
 * Un-crippled update checker and added it to debug output.
 
