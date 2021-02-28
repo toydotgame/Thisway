@@ -21,6 +21,8 @@ This plugin will _always_ be for Minecraft Release 1.6.4. I am not updating it t
 ## Changelog
 ### Release 1.2.3
 * Removed update checker, it sucked
+* Cleaned Debug Mode output
+* Removed some comments from the code
 
 ### Release 1.2.2
 * Un-crippled update checker and added it to debug output.
