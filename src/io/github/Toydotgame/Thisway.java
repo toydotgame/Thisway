@@ -14,10 +14,10 @@ import org.bukkit.entity.Player;
 public class Thisway implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
-		if(sender instanceof Player) { // Checks that the command was sent by a player.
+		if(sender instanceof Player) {
 			Player playerSender = (Player) sender;
 			if(playerSender.hasPermission("thisway.use") == true) {
-				if(args.length == 1) { // If there's only _one_ argument; check that: args[0] is all digits, nothing else; args[0] is _not_ 0.
+				if(args.length == 1) {
 					if(args[0].matches("^[0-9]*$") && args[0] != "0") {
 						DataStorage.debug = false;
 						thisway(sender, args);
@@ -26,72 +26,69 @@ public class Thisway implements CommandExecutor {
 						sender.sendMessage(ChatColor.RED + "Invalid argument!");
 						return false;
 					}
-				} else if(args.length == 2) { // If there's _two_ arguments:
+				} else if(args.length == 2) {
 					if(playerSender.hasPermission("thisway.debug") == true) {
-						if(args[1].equalsIgnoreCase("true")) { // If the second argument is "true':
-							if(args[0].matches("^[0-9]*$") && args[0] != "0") { // If the first argument is an accepted number.
+						if(args[1].equalsIgnoreCase("true")) {
+							if(args[0].matches("^[0-9]*$") && args[0] != "0") {
 								DataStorage.debug = true;
 								
-								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ==="); // Debug header in player chat.
+								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ===");
 								sender.sendMessage("Plugin version: " + DataStorage.localVersion);
-								sender.sendMessage(/* ChatColor.GREY + */ "Always remember to check for updates!");
 								thisway(sender, args);
-								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ==="); // Debug footer.
+								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
 								
 								return true;
 							} else {
 								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
 								return false;
-							} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. Ends arg 1 number check.
-						} else if(args[1].equalsIgnoreCase("false")) { // If arg 2 is "false":
-							if(args[0].matches("^[0-9]*$") && args[0] != "0") { // Number validity check like before.
+							} // Ends arg 1 number check.
+						} else if(args[1].equalsIgnoreCase("false")) {
+							if(args[0].matches("^[0-9]*$") && args[0] != "0") {
 								DataStorage.debug = false;
 								thisway(sender, args);
 								return true;
 							} else {
 								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
 								return false;
-							} // Ends `if(args[0].matches("^[0-9]*$") && args[0] != "0")`. (Number validity check)
+							}
 						} else {
 							sender.sendMessage(ChatColor.RED + "Invalid second argument!");
 							return false;
-						} // Ends `if(args[1] == "true")` or `else if(args[1] == "false")`. (Debug toggle argument)
-					} else { // If they don't have the thisway.debug permission:
+						} // Ends arg 2 true/false checker.
+					} else { // If player lacks thisway.debug
 						sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use Debug Mode!");
-						return true; // Permission errors alway return true.
+						return true; // It should return true because the command usage was correct, but the permissions weren't.
 					}
-				} else { // If arguments are invalid, run:
+				} else {
 					sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
 					return false;
-				} // Ends `if(args.length == 2 && args[1] == "true") {}`. Ends _debug = true_ check if there's two arguments. Also ends the other checks about arguments (First level of checks, that is!).
-			} else {// If the sender does not have thisway.use:
+				} // Argument amount check closing brace.
+			} else { // if player lacks thisway.use
 				sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use this command!");
-				return true; // Perms return true, always; whether there's an error or not.
-			} // Ends permission check for thisway.use.
-		} else { // Else statement for: `if(sender instanceof Player) {}`
-			// If sender is not player, run:
+				return true;
+			}
+		} else {
+			// If sender is not player:
 			System.out.print("[Thisway] Only players can use this command!");
-			return false;
-		} // Ends `if(sender instanceof Player) {}`. Ends _player is sender_ check.
-	} // Ends `public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {}`. Ends main method (onCommand()).
+			return true; // Returning true will stop command usage from being printed to console.
+			// We don't want to mess with the console.
+		} // Ends player = sender check.
+	} // Ends onCommand() method.
 	
 	@SuppressWarnings("deprecation")
-	public void thisway(CommandSender sender, String[] args) { // Most likely needed to keep onCommand() method simple and prevent two copies of the code from being needed in one class.
+	public void thisway(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		
 		// This detects which way the player is facing:
 		float yaw = player.getEyeLocation().getYaw();
-		if(DataStorage.debug == true) { // You'll see these a bunch, they determine if they should send debug stats judged by if DataStorage.debug is true.
-			/* Fun story:
-			 * I had this if() statement as this:
-			 *     if(DataStorage.debug = true) {}
-			 * See the problem? It's the "=".
-			 * My IDE didn't have a problem with it, but running the command made the debug message show no matter what.
-			 * Anyway, I've fixed it now. :) */
+		if(DataStorage.debug == true) {
+			// This will print debug info if debug mode is activated. No need for an `else` in order to be quiet if there's no need for debug.
 			sender.sendMessage("Player Yaw: " + String.valueOf(yaw));
 		}
 		
-		float pitch = player.getEyeLocation().getPitch(); // Used later during teleport script. It's only up here so that debug output has yaw and pitch next to each other.
+		float pitch = player.getEyeLocation().getPitch();
+		// Used later during teleport script.
+		// It's only up here so that debug output has yaw and pitch next to each other.
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Player Pitch: " + String.valueOf(pitch));
 		}
@@ -104,7 +101,7 @@ public class Thisway implements CommandExecutor {
 			if(DataStorage.debug == true) {
 				sender.sendMessage("Player Facing: SOUTH");
 			}
-			DataStorage.facing = "SOUTH"; // I really love the DataStorage class, it's so neat!
+			DataStorage.facing = "SOUTH";
 		} else if(yaw < 135) {
 			if(DataStorage.debug == true) {
 				sender.sendMessage("Player Facing: WEST");
@@ -155,29 +152,17 @@ public class Thisway implements CommandExecutor {
 		}
 		
 		double playerModifiedX = playerX + DataStorage.xModDistance + 0.5;
-		/* I hopefully shouldn't _need_ to modify the Y; both due to the plugin being for horizontal teleportation, not vertical - and I'm hoping Bukkit/Spigot uses a different teleportation system than Minecraft 1.6:
-		 * In vanilla Minecraft [1.6], when you TP - say - 100 blocks ahead: `/tp @p ~100 ~ ~`
-		 * ...and you spam that command in, after a few goes, you'll start going down into the ground.
-		 * If Bukkit _does_ use the same TP system as that, and _also_ has that bug; I'll need to make a modified Y which TPs you up 0.2 (Or whatever height difference it actually is) blocks each time you use the command,
-		 * thus compensating for the height you descend whilst TPing. */
 		double playerModifiedZ = playerZ + DataStorage.zModDistance + 0.5;
 		if(DataStorage.debug == true) {
 			sender.sendMessage("New Player Position (To TP to): " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ);
 		}
 		
-		
-		
-		// This doesn't belong anywhere, but it needs to be above the new head blocktype tester.
+		// This needs to be above the suffocation detector.
 		// All this does is get the world name and player's pitch.
 		String worldName = player.getLocation().getWorld().getName(); // Bloody complicated to just get the world name as a string, innit?
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Current World: " + worldName);
-		}
-		/* I get the world name in case the current world isn't called "world",
-		 * or is the main world has a different name,
-		 * _or_ if the command is being used in a different dimension _or_ world;
-		 * due to plugins like Multiverse messing this up. */
-		
+		}		
 		
 		
 		// This bit _should_ check that the player's new location is air:
@@ -199,22 +184,21 @@ public class Thisway implements CommandExecutor {
 			if(newStandingLocation.getBlock().getType() == Material.AIR) {
 				player.getWorld().getBlockAt(newStandingLocation).setTypeId(20);
 				
-				// This bit actaully TPs the player!		
+				// This bit actually TPs the player!		
 				Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
 				player.teleport(newLocation);
 				
 				sender.sendMessage("Teleport successful.");
 				System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
-			} else { // If the new location is safe to stand on:
-				// This bit actaully TPs the player!		
+			} else { // If the new location is safe to stand on:	
 				Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
 				player.teleport(newLocation);
 				
 				sender.sendMessage("Teleport successful.");
 				System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
-			} // Ends new location air check for the block being stood on.
+			}
 		} else { // If the new head location _isn't_ safe:
-			sender.sendMessage(ChatColor.RED + "New location is inside a block! Try again.");
-		} // Ends suffocation check.
-	} // Ends `public void thisway() {}`. Ends thisway() method.
-} // Ends `public class Thisway implements CommandExecutor {}`. Ends class.
+			sender.sendMessage(ChatColor.RED + "New location is inside a block!");
+		}
+	} // Closes off thisway() method.
+} // Ends class.
