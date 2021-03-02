@@ -23,6 +23,7 @@ If Thisway doesn't work on newer versions, I'm not going to put much effort into
 * Removed update checker, it sucked
 * Cleaned Debug Mode output
 * Removed some comments from the code
+* Stopped command usage from being printed into console when console uses `/thisway`.
 
 ### Release 1.2.2
 * Un-crippled update checker and added it to debug output.
