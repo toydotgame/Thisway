@@ -1,7 +1,5 @@
 package io.github.Toydotgame;
 
-// Ah, so simple, yet so helpful.
-
 public class DataStorage {
 	public static String localVersion;
 
