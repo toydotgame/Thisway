@@ -1,11 +1,9 @@
 # Thisway
-A simple teleportation plugin for Spigot servers on 1.6.4. Due to it's simplicity it will most likely work with Bukkit (it only uses bukkit imports).
-
 <div align="center">
-	<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/toydotgame/Thisway/total?label=GitHub%20Downloads">
-	<img alt="Spiget Downloads" src="https://img.shields.io/spiget/downloads/87115?label=SpigotMC%20Downloads"><br>
-	<img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/toydotgame/Thisway?label=release">
-	<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/toydotgame/Thisway"><br> <!-- I put a `<br>` because I wanted the repo. social details a bit more seperate. -->
+	<img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/toydotgame/Thisway/total?label=GitHub%20Downloads">
+	<img alt="SpigotMC Downloads" src="https://img.shields.io/spiget/downloads/87115?label=SpigotMC%20Downloads"><br>
+	<img alt="GitHub Latest Release Tag" src="https://img.shields.io/github/v/tag/toydotgame/Thisway?label=release">
+	<img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/toydotgame/Thisway"><br> <!-- I put a `<br>` because I wanted the repo. social details a bit more seperate. -->
 	<img alt="GitHub forks" src="https://img.shields.io/github/forks/toydotgame/Thisway">
 	<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/toydotgame/Thisway">
 </div>
@@ -15,7 +13,7 @@ All of the above can be found on the [wiki](https://github.com/Toydotgame/Thiswa
 
 ## Version
 Latest versions always come first to the [Releases](https://github.com/Toydotgame/Thisway/releases) tab.
-This plugin was developed primarily for 1.6.4. I have not tested it on newer versions.
+This plugin was developed primarily for 1.6.4.
 If Thisway doesn't work on newer versions, I'm not going to put much effort into making it compatible. It's for 1.6.4; and as long as that works, that's all I'll develop for.
 
 ## Changelog
