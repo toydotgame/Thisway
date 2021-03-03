@@ -1,4 +1,4 @@
-package io.github.Toydotgame;
+package io.github.toydotgame;
 
 import java.util.Arrays;
 
