@@ -33,7 +33,7 @@ public class Thisway implements CommandExecutor {
 								DataStorage.debug = true;
 								
 								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ===");
-								sender.sendMessage("Plugin version: " + DataStorage.localVersion);
+								sender.sendMessage("Plugin Version: " + DataStorage.localVersion);
 								thisway(sender, args);
 								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
 								
