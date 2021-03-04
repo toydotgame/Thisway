@@ -1,4 +1,4 @@
-package io.github.Toydotgame;
+package io.github.toydotgame;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

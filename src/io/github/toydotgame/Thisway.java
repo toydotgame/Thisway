@@ -1,4 +1,4 @@
-package io.github.Toydotgame;
+package io.github.toydotgame;
 
 import java.util.Arrays;
 
@@ -36,6 +36,7 @@ public class Thisway implements CommandExecutor {
 								sender.sendMessage("Plugin Version: " + DataStorage.localVersion);
 								thisway(sender, args);
 								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
+								sender.sendMessage("Teleport successful.");
 								
 								return true;
 							} else {
@@ -188,13 +189,17 @@ public class Thisway implements CommandExecutor {
 				Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
 				player.teleport(newLocation);
 				
-				sender.sendMessage("Teleport successful.");
+				if(DataStorage.debug != true) { // This success message comes after the footer in chat. Look at the `onCommand()` method above.
+					sender.sendMessage("Teleport successful.");
+				}
 				System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
 			} else { // If the new location is safe to stand on:	
 				Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
 				player.teleport(newLocation);
 				
-				sender.sendMessage("Teleport successful.");
+				if(DataStorage.debug != true) {
+					sender.sendMessage("Teleport successful.");
+				}
 				System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
 			}
 		} else { // If the new head location _isn't_ safe:
