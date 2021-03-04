@@ -1,14 +1,14 @@
 name: Thisway
 main: io.github.Toydotgame.Main
-version: 1.2.3
-description: Teleports the player in the direction they're facing.
+version: 1.2.4
+description: A simple Spigot teleportation plugin for 1.6+.
 author: Toydotgam
 prefix: Thisway
 commands:
    thisway:
       description: Teleport the player a select amount of blocks in the direction they're facing.
       aliases: tw
-      usage: "Usage: /<command> <distance>"
+      usage: "Usage: /<command> <distance> [true|false]"
 permissions:
    thisway.admin:
       children:
