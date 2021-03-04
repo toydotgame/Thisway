@@ -20,6 +20,7 @@ I can only guarantee that Thisway will work for 1.6.4, but any other versions ar
 ### Release 1.2.4
 * Repositioned teleport success message in chat when Debug Mode is active.
 * (Backend) renamed main package from `io.github.Toydotgame` to `io.github.toydotgame`. Big change, I know.
+* (Backend) Thisway is compiled with JRE v1.8, this should allow it to run on out-of-date servers and servers at the bleeding edge of Spigot.
 
 ### Release 1.2.3
 * Removed update checker, it sucked
