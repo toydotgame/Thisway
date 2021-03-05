@@ -127,8 +127,17 @@ public class Thisway implements CommandExecutor {
 		double playerX = location.getX();
 		int playerY = location.getBlockY();
 		double playerZ = location.getZ();
+		
+		int humanReadableX = (int) playerX; // Casting int to a double (playerX) removes any decimals. (i.e: `~.324587432980` gets turned to `~.0`)
+		/* 
+		 * There's no need for a Y, as the Y is stored as an int.
+		 * Plus, it's collected using Location#getBlockY(), which means the actual block coordinate is asked for,
+		 * which is of type int and ends with `~.0`.
+		 */
+		int humanReadableZ = (int) playerZ;
+		
 		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Position: " + playerX + ", " + playerY + ", " + playerZ); // Simple debug for what coordinates it's looking at.
+			sender.sendMessage("Player Position: " + humanReadableX + ", " + playerY + ", " + humanReadableZ); // Simple debug for what coordinates it's looking at.
 		}
 		
 		
@@ -154,8 +163,12 @@ public class Thisway implements CommandExecutor {
 		
 		double playerModifiedX = playerX + DataStorage.xModDistance /* + 0.5 */;
 		double playerModifiedZ = playerZ + DataStorage.zModDistance /* + 0.5 */;
+
+		int humanReadableNewX = (int) playerModifiedX;
+		int humanReadableNewZ = (int) playerModifiedZ;
+		
 		if(DataStorage.debug == true) {
-			sender.sendMessage("New Player Position (To TP to): " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ);
+			sender.sendMessage("New Player Position (To TP to): " + humanReadableNewX + ", " + playerY + ", " + humanReadableNewZ);
 		}
 		
 		// This needs to be above the suffocation detector.
@@ -194,16 +207,6 @@ public class Thisway implements CommandExecutor {
 			if(DataStorage.debug != true) { // This success message comes after the footer in chat. Look at the `onCommand()` method above.
 				sender.sendMessage("Teleport successful.");
 			}
-			
-			int humanReadableX = (int) playerX; // Casting int to a double (playerX) removes any decimals. (i.e: `~.324587432980` gets turned to `~.0`)
-			/* 
-			 * There's no need for a Y, as the Y is stored as an int.
-			 * Plus, it's collected using Location#getBlockY(), which means the actual block coordinate is asked for,
-			 * which is of type int and ends with `~.0`.
-			 */
-			int humanReadableZ = (int) playerZ;
-			int humanReadableNewX = (int) playerModifiedX;
-			int humanReadableNewZ = (int) playerModifiedZ;
 			
 			System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + humanReadableX + ", " + playerY + ", " + humanReadableZ + " to " + humanReadableNewX + ", " + playerY + ", " + humanReadableNewZ + ".");
 		} else { // If the new head location _isn't_ safe:
