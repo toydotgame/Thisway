@@ -124,9 +124,9 @@ public class Thisway implements CommandExecutor {
 		
 		// _This_ detects the player's coordinates!:
 		Location location = player.getLocation();
-		int playerX = location.getBlockX();
+		double playerX = location.getX();
 		int playerY = location.getBlockY();
-		int playerZ = location.getBlockZ();
+		double playerZ = location.getZ();
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Player Position: " + playerX + ", " + playerY + ", " + playerZ); // Simple debug for what coordinates it's looking at.
 		}
@@ -152,8 +152,8 @@ public class Thisway implements CommandExecutor {
 			DataStorage.zModDistance = 0;
 		}
 		
-		double playerModifiedX = playerX + DataStorage.xModDistance + 0.5;
-		double playerModifiedZ = playerZ + DataStorage.zModDistance + 0.5;
+		double playerModifiedX = playerX + DataStorage.xModDistance /* + 0.5 */;
+		double playerModifiedZ = playerZ + DataStorage.zModDistance /* + 0.5 */;
 		if(DataStorage.debug == true) {
 			sender.sendMessage("New Player Position (To TP to): " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ);
 		}
