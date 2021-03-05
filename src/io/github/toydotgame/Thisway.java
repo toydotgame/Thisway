@@ -128,16 +128,15 @@ public class Thisway implements CommandExecutor {
 		int playerY = location.getBlockY();
 		double playerZ = location.getZ();
 		
-		int humanReadableX = (int) playerX; // Casting int to a double (playerX) removes any decimals. (i.e: `~.324587432980` gets turned to `~.0`)
-		/* 
-		 * There's no need for a Y, as the Y is stored as an int.
-		 * Plus, it's collected using Location#getBlockY(), which means the actual block coordinate is asked for,
-		 * which is of type int and ends with `~.0`.
+		/*
+		 * The rounder() method and these semi-rounded coords are only used in Debug Mode.
+		 * Thisway still teleports even more precisely than this.
 		 */
-		int humanReadableZ = (int) playerZ;
+		double debugX = rounder(playerX);
+		double debugZ = rounder(playerZ);
 		
 		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Position: " + humanReadableX + ", " + playerY + ", " + humanReadableZ); // Simple debug for what coordinates it's looking at.
+			sender.sendMessage("Player Position: " + debugX + ", " + playerY + ", " + debugZ); // Simple debug for what coordinates it's looking at.
 		}
 		
 		
@@ -163,12 +162,11 @@ public class Thisway implements CommandExecutor {
 		
 		double playerModifiedX = playerX + DataStorage.xModDistance;
 		double playerModifiedZ = playerZ + DataStorage.zModDistance;
-
-		int humanReadableNewX = (int) playerModifiedX;
-		int humanReadableNewZ = (int) playerModifiedZ;
 		
+		double debugNewX = rounder(playerModifiedX);
+		double debugNewZ = rounder(playerModifiedZ);
 		if(DataStorage.debug == true) {
-			sender.sendMessage("New Player Position (To TP to): " + humanReadableNewX + ", " + playerY + ", " + humanReadableNewZ);
+			sender.sendMessage("New Player Position (To TP to): " + debugNewX + ", " + playerY + ", " + debugNewZ);
 		}
 		
 		// This needs to be above the suffocation detector.
@@ -208,9 +206,24 @@ public class Thisway implements CommandExecutor {
 				sender.sendMessage("Teleport successful.");
 			}
 			
+			int humanReadableX = (int) playerX; // Casting int to a double (playerX) removes any decimals. (i.e: `~.324587432980` gets turned to `~.0`)
+			/* 
+			 * There's no need for a Y, as the Y is stored as an int.
+			 * Plus, it's collected using Location#getBlockY(), which means the actual block coordinate is asked for,
+			 * which is of type int and ends with `~.0`.
+			 */
+			int humanReadableZ = (int) playerZ;
+			int humanReadableNewX = (int) playerModifiedX;
+			int humanReadableNewZ = (int) playerModifiedZ;
+			
 			System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + humanReadableX + ", " + playerY + ", " + humanReadableZ + " to " + humanReadableNewX + ", " + playerY + ", " + humanReadableNewZ + ".");
 		} else { // If the new head location _isn't_ safe:
 			sender.sendMessage(ChatColor.RED + "New location is inside a block!");
 		}
 	} // Closes off thisway() method.
+	
+	public static double rounder(double value) {
+		double scale = Math.pow(10, 5); // 5 is the number of places the F3 screen shows for coordinates.
+		return Math.round(value * scale) / scale;
+	}
 } // Ends class.
