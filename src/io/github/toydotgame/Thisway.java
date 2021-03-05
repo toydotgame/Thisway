@@ -161,8 +161,8 @@ public class Thisway implements CommandExecutor {
 			DataStorage.zModDistance = 0;
 		}
 		
-		double playerModifiedX = playerX + DataStorage.xModDistance /* + 0.5 */;
-		double playerModifiedZ = playerZ + DataStorage.zModDistance /* + 0.5 */;
+		double playerModifiedX = playerX + DataStorage.xModDistance;
+		double playerModifiedZ = playerZ + DataStorage.zModDistance;
 
 		int humanReadableNewX = (int) playerModifiedX;
 		int humanReadableNewZ = (int) playerModifiedZ;
