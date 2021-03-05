@@ -183,25 +183,29 @@ public class Thisway implements CommandExecutor {
 		}
 		if(newHeadLocationIsSafe == true) {
 			if(newStandingLocation.getBlock().getType() == Material.AIR) {
+				// This is the fall catcher with the glass block.
 				player.getWorld().getBlockAt(newStandingLocation).setTypeId(20);
-				
-				// This bit actually TPs the player!		
-				Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
-				player.teleport(newLocation);
-				
-				if(DataStorage.debug != true) { // This success message comes after the footer in chat. Look at the `onCommand()` method above.
-					sender.sendMessage("Teleport successful.");
-				}
-				System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
-			} else { // If the new location is safe to stand on:	
-				Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
-				player.teleport(newLocation);
-				
-				if(DataStorage.debug != true) {
-					sender.sendMessage("Teleport successful.");
-				}
-				System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + playerX + ", " + playerY + ", " + playerZ + " to " + playerModifiedX + ", " + playerY + ", " + playerModifiedZ + ".");
 			}
+			
+			// This bit actually TPs the player!		
+			Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
+			player.teleport(newLocation);
+			
+			if(DataStorage.debug != true) { // This success message comes after the footer in chat. Look at the `onCommand()` method above.
+				sender.sendMessage("Teleport successful.");
+			}
+			
+			int humanReadableX = (int) playerX; // Casting int to a double (playerX) removes any decimals. (i.e: `~.324587432980` gets turned to `~.0`)
+			/* 
+			 * There's no need for a Y, as the Y is stored as an int.
+			 * Plus, it's collected using Location#getBlockY(), which means the actual block coordinate is asked for,
+			 * which is of type int and ends with `~.0`.
+			 */
+			int humanReadableZ = (int) playerZ;
+			int humanReadableNewX = (int) playerModifiedX;
+			int humanReadableNewZ = (int) playerModifiedZ;
+			
+			System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + humanReadableX + ", " + playerY + ", " + humanReadableZ + " to " + humanReadableNewX + ", " + playerY + ", " + humanReadableNewZ + ".");
 		} else { // If the new head location _isn't_ safe:
 			sender.sendMessage(ChatColor.RED + "New location is inside a block!");
 		}
