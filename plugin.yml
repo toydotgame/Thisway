@@ -2,7 +2,7 @@ name: Thisway
 main: io.github.toydotgame.Main
 version: 1.2.4
 description: A simple Spigot teleportation plugin for 1.6+.
-author: Toydotgam
+author: toydotgame
 prefix: Thisway
 commands:
    thisway:

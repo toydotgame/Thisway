@@ -42,7 +42,7 @@ public class Thisway implements CommandExecutor {
 							} else {
 								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
 								return false;
-							} // Ends arg 1 number check.
+							}
 						} else if(args[1].equalsIgnoreCase("false")) {
 							if(args[0].matches("^[0-9]*$") && args[0] != "0") {
 								DataStorage.debug = false;
@@ -55,48 +55,41 @@ public class Thisway implements CommandExecutor {
 						} else {
 							sender.sendMessage(ChatColor.RED + "Invalid second argument!");
 							return false;
-						} // Ends arg 2 true/false checker.
-					} else { // If player lacks thisway.debug
+						}
+					} else {
 						sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use Debug Mode!");
-						return true; // It should return true because the command usage was correct, but the permissions weren't.
+						return true;
 					}
 				} else {
 					sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
 					return false;
-				} // Argument amount check closing brace.
-			} else { // if player lacks thisway.use
+				}
+			} else {
 				sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use this command!");
 				return true;
 			}
 		} else {
-			// If sender is not player:
 			System.out.print("[Thisway] Only players can use this command!");
-			return true; // Returning true will stop command usage from being printed to console.
-			// We don't want to mess with the console.
-		} // Ends player = sender check.
-	} // Ends onCommand() method.
+			return true;
+		}
+	}
 	
 	@SuppressWarnings("deprecation")
 	public void thisway(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		
-		// This detects which way the player is facing:
 		float yaw = player.getEyeLocation().getYaw();
 		if(DataStorage.debug == true) {
-			// This will print debug info if debug mode is activated. No need for an `else` in order to be quiet if there's no need for debug.
 			sender.sendMessage("Player Yaw: " + String.valueOf(yaw));
 		}
 		
 		float pitch = player.getEyeLocation().getPitch();
-		// Used later during teleport script.
-		// It's only up here so that debug output has yaw and pitch next to each other.
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Player Pitch: " + String.valueOf(pitch));
 		}
 		
 		if(yaw < 0) {
 			yaw += 360;
-			// I don't know _exactly_ what this does, it's some mathematical function from the Bukkit forums though - and it works. ;)
 		}
 		if(yaw >= 315 || yaw < 45) {
 			if(DataStorage.debug == true) {
@@ -120,42 +113,28 @@ public class Thisway implements CommandExecutor {
 			DataStorage.facing = "EAST";
 		}
 		
-		
-		
-		// _This_ detects the player's coordinates!:
 		Location location = player.getLocation();
 		double playerX = location.getX();
 		int playerY = location.getBlockY();
 		double playerZ = location.getZ();
-		
-		/*
-		 * The rounder() method and these semi-rounded coords are only used in Debug Mode.
-		 * Thisway still teleports even more precisely than this.
-		 */
+
 		double debugX = rounder(playerX);
 		double debugZ = rounder(playerZ);
 		
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Player Position: " + debugX + ", " + playerY + ", " + debugZ); // Simple debug for what coordinates it's looking at.
 		}
-		
-		
-		
-		// This gets the coordinates it needs to TP to:
+
 		if(DataStorage.facing == "NORTH") {
-			// North in Minecraft is on the -Z axis. I'll modify the coordinates as such!
 			DataStorage.xModDistance = 0;
 			DataStorage.zModDistance = Integer.parseInt("-" + args[0]);
 		} else if(DataStorage.facing == "SOUTH") {
-			// South is +Z in-game.
 			DataStorage.xModDistance = 0;
 			DataStorage.zModDistance = Integer.parseInt(args[0]);
 		} else if(DataStorage.facing == "EAST") {
-			// East is +X.
 			DataStorage.xModDistance = Integer.parseInt(args[0]);
 			DataStorage.zModDistance = 0;
 		} else if(DataStorage.facing == "WEST") {
-			// West is -X.
 			DataStorage.xModDistance = Integer.parseInt("-" + args[0]);
 			DataStorage.zModDistance = 0;
 		}
@@ -169,22 +148,17 @@ public class Thisway implements CommandExecutor {
 			sender.sendMessage("New Player Position (To TP to): " + debugNewX + ", " + playerY + ", " + debugNewZ);
 		}
 		
-		// This needs to be above the suffocation detector.
-		// All this does is get the world name and player's pitch.
 		String worldName = player.getLocation().getWorld().getName(); // Bloody complicated to just get the world name as a string, innit?
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Current World: " + worldName);
 		}		
 		
-		
-		// This bit _should_ check that the player's new location is air:
 		int playerNewHeadY = playerY + 1;
 		Location newHeadLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerNewHeadY, playerModifiedZ, yaw, pitch); // These coordinates are where the head _will_ be. I need to check to make sure they don't suffocate!
 		if(DataStorage.debug == true) {
 			sender.sendMessage("New Player Head Location Block Type: " + newHeadLocation.getBlock().getType());
 		}
 		
-		// This checks what block the player will be standing on:
 		int playerStandingOnBlockY = playerY - 1;
 		Location newStandingLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerStandingOnBlockY, playerModifiedZ, yaw, pitch);
 		
@@ -194,36 +168,29 @@ public class Thisway implements CommandExecutor {
 		}
 		if(newHeadLocationIsSafe == true) {
 			if(newStandingLocation.getBlock().getType() == Material.AIR) {
-				// This is the fall catcher with the glass block.
 				player.getWorld().getBlockAt(newStandingLocation).setTypeId(20);
 			}
 			
-			// This bit actually TPs the player!		
 			Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch); // That's why I got the yaw and pitch; so that when you TP, you're looking in the same angle; instead of just resetting it.
 			player.teleport(newLocation);
 			
-			if(DataStorage.debug != true) { // This success message comes after the footer in chat. Look at the `onCommand()` method above.
+			if(DataStorage.debug != true) {
 				sender.sendMessage("Teleport successful.");
 			}
 			
-			int humanReadableX = (int) playerX; // Casting int to a double (playerX) removes any decimals. (i.e: `~.324587432980` gets turned to `~.0`)
-			/* 
-			 * There's no need for a Y, as the Y is stored as an int.
-			 * Plus, it's collected using Location#getBlockY(), which means the actual block coordinate is asked for,
-			 * which is of type int and ends with `~.0`.
-			 */
+			int humanReadableX = (int) playerX;
 			int humanReadableZ = (int) playerZ;
 			int humanReadableNewX = (int) playerModifiedX;
 			int humanReadableNewZ = (int) playerModifiedZ;
 			
 			System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + humanReadableX + ", " + playerY + ", " + humanReadableZ + " to " + humanReadableNewX + ", " + playerY + ", " + humanReadableNewZ + ".");
-		} else { // If the new head location _isn't_ safe:
+		} else {
 			sender.sendMessage(ChatColor.RED + "New location is inside a block!");
 		}
-	} // Closes off thisway() method.
+	}
 	
 	public static double rounder(double value) {
-		double scale = Math.pow(10, 5); // 5 is the number of places the F3 screen shows for coordinates.
+		double scale = Math.pow(10, 5);
 		return Math.round(value * scale) / scale;
 	}
-} // Ends class.
+}
