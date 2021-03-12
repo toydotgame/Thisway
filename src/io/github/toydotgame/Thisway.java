@@ -111,25 +111,16 @@ public class Thisway implements CommandExecutor {
 			yaw += 360; // This makes the next if() set have workable coords.
 		}
 		if(yaw >= 315 || yaw < 45) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: SOUTH");
-			}
 			DataStorage.facing = "SOUTH";
 		} else if(yaw < 135) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: WEST");
-			}
 			DataStorage.facing = "WEST";
 		} else if(yaw < 225) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: NORTH");
-			}
 			DataStorage.facing = "NORTH";
 		} else if(yaw < 315) {
-			if(DataStorage.debug == true) {
-				sender.sendMessage("Player Facing: EAST");
-			}
 			DataStorage.facing = "EAST";
+		}
+		if(DataStorage.debug == true) {
+			sender.sendMessage("Player Facing: " + DataStorage.facing);
 		}
 		
 		Location location = player.getLocation();
