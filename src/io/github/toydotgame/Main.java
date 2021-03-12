@@ -6,8 +6,8 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		DataStorage.localVersion = this.getDescription().getVersion();
-		System.out.print("[Thisway] Plugin loaded successfully!");
 		this.getCommand("thisway").setExecutor(new Thisway());
+		System.out.print("[Thisway] Plugin loaded successfully!");
 	}
 
 	@Override
