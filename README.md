@@ -17,6 +17,10 @@ This plugin was developed primarily for 1.6.4 Spigot. I doubt Thisway will be co
 I can only guarantee that Thisway will work for 1.6.4, but any other versions are an added bonus - yet do not expect that I will work on compatibility with these newer versions.
 
 ## Changelog
+### Release 1.3
+* Optimised Debug Mode's scripts for the player's facing direction.
+* Plugin loading in the console is more truthful to the actual loading sequence.
+
 ### Release 1.2.4
 * Repositioned teleport success message in chat when Debug Mode is active.
 * (Backend) renamed main package from `io.github.Toydotgame` to `io.github.toydotgame`. Big change, I know.
