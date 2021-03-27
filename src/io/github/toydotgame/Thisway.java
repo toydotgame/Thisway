@@ -116,11 +116,11 @@ public class Thisway implements CommandExecutor {
 		 */
 		float yaw = player.getEyeLocation().getYaw();
 		if(DataStorage.debug == true) { // Debug Mode will print data to chat if it's turned on.
-			sender.sendMessage("Player Yaw: " + String.valueOf(yaw));
+			sender.sendMessage("Player Yaw: " + String.valueOf(rounder(yaw)));
 		}
 		float pitch = player.getEyeLocation().getPitch();
 		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Pitch: " + String.valueOf(pitch));
+			sender.sendMessage("Player Pitch: " + String.valueOf(rounder(pitch)));
 		}
 		
 		if(yaw < 0) {
