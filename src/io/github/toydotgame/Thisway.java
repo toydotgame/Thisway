@@ -1,5 +1,6 @@
 package io.github.toydotgame;
 
+import java.awt.TextComponent;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
@@ -30,36 +31,51 @@ public class Thisway implements CommandExecutor {
 			Player playerSender = (Player) sender;
 			if(playerSender.hasPermission("thisway.use") == true) {
 				if(args.length == 1) {
-					if(args[0].matches("^[0-9]*$") && args[0] != "0") {
-						DataStorage.debug = false;
-						thisway(sender, args);
-						return true;
+					if(args[0].matches("^[0-9]*$")) {
+						if(Integer.parseInt(args[0]) > 0) {
+							DataStorage.debug = false;
+							thisway(sender, args);
+							return true;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Teleportation distance must be more than 0!");
+							return false;
+						}
 					} else {
-						sender.sendMessage(ChatColor.RED + "Invalid argument!");
+						sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
 						return false;
 					}
 				} else if(args.length == 2) {
 					if(playerSender.hasPermission("thisway.debug") == true) {
 						if(args[1].equalsIgnoreCase("true")) {
-							if(args[0].matches("^[0-9]*$") && args[0] != "0") {
-								DataStorage.debug = true;
-								
-								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ===");
-								sender.sendMessage("Plugin Version: " + DataStorage.localVersion);
-								thisway(sender, args);
-								sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
-								sender.sendMessage("Teleport successful.");
-								
-								return true;
+							if(args[0].matches("^[0-9]*$")) {
+								if(Integer.parseInt(args[0]) > 0) {
+									DataStorage.debug = true;
+									
+									sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ===");
+									sender.sendMessage("Plugin Version: " + DataStorage.localVersion);
+									thisway(sender, args);
+									sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
+									sender.sendMessage("Teleport successful.");
+									
+									return true;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Teleportation distance must be more than 0!");
+									return false;
+								}
 							} else {
 								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
 								return false;
 							}
 						} else if(args[1].equalsIgnoreCase("false")) {
-							if(args[0].matches("^[0-9]*$") && args[0] != "0") {
-								DataStorage.debug = false;
-								thisway(sender, args);
-								return true;
+							if(args[0].matches("^[0-9]*$")) {
+								if(Integer.parseInt(args[0]) > 0) {
+									DataStorage.debug = false;
+									thisway(sender, args);
+									return true;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Teleportation distance must be more than 0!");
+									return false;
+								}
 							} else {
 								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
 								return false;
