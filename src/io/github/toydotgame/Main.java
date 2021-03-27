@@ -9,9 +9,4 @@ public class Main extends JavaPlugin {
 		this.getCommand("thisway").setExecutor(new Thisway());
 		System.out.print("[Thisway] Plugin loaded successfully!");
 	}
-
-	@Override
-	public void onDisable() {
-		// No.
-	}
 }
