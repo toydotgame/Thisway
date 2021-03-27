@@ -18,8 +18,12 @@ I can only guarantee that Thisway will work for 1.6.4, but any other versions ar
 
 ## Changelog
 ### Release 1.3
-* Optimised Debug Mode's scripts for the player's facing direction.
+* Optimised Debug Mode's scripts for the player's facing direction. (Removed useless `if()` statements)
 * Plugin loading in the console is more truthful to the actual loading sequence.
+* Made yaw and pitch rounded to 5 decimal places in Debug Mode.
+* Removed comments and optimised Thisway's general impact on the server's TPS.
+* Made error messages more concise and accurate to what went wrong.
+* General code cleanup, plus `plugin.yml` is accurate to the SpigotMC page.
 
 ### Release 1.2.4
 * Repositioned teleport success message in chat when Debug Mode is active.
