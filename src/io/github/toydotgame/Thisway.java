@@ -1,6 +1,5 @@
 package io.github.toydotgame;
 
-import java.awt.TextComponent;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
