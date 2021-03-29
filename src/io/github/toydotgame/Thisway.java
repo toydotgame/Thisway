@@ -123,7 +123,7 @@ public class Thisway implements CommandExecutor {
 		}
 		
 		if(yaw < 0) {
-			yaw += 360; // This makes the next if() set have workable coords.
+			yaw += 360; // This makes the next if() set have workable coords. It can be read like `yaw = yaw + 360`.
 		}
 		if(yaw >= 315 || yaw < 45) {
 			DataStorage.facing = "SOUTH";
