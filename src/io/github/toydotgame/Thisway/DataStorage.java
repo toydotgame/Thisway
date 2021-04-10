@@ -1,4 +1,4 @@
-package io.github.toydotgame;
+package io.github.toydotgame.Thisway;
 
 public class DataStorage {
 	public static String localVersion;
