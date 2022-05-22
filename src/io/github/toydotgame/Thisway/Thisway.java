@@ -25,79 +25,51 @@ public class Thisway implements CommandExecutor {
 	 * If the command _is_ written right, but something else isn't right, Thisway will return true but not run the next part of the code:
 	 * The thisway() method.
 	 */
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
-		if(sender instanceof Player) {
-			Player playerSender = (Player) sender;
-			if(playerSender.hasPermission("thisway.use") == true) {
-				if(args.length == 1) {
-					if(args[0].matches("^[0-9]*$")) {
-						if(Integer.parseInt(args[0]) > 0) {
-							DataStorage.debug = false;
-							thisway(sender, args);
-							return true;
-						} else {
-							sender.sendMessage(ChatColor.RED + "Teleportation distance must be more than 0!");
-							return false;
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
-						return false;
-					}
-				} else if(args.length == 2) {
-					if(playerSender.hasPermission("thisway.debug") == true) {
-						if(args[1].equalsIgnoreCase("true")) {
-							if(args[0].matches("^[0-9]*$")) {
-								if(Integer.parseInt(args[0]) > 0) {
-									DataStorage.debug = true;
-									
-									sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ===");
-									sender.sendMessage("Plugin Version: " + DataStorage.localVersion);
-									thisway(sender, args);
-									sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
-									sender.sendMessage("Teleport successful.");
-									
-									return true;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Teleportation distance must be more than 0!");
-									return false;
-								}
-							} else {
-								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
-								return false;
-							}
-						} else if(args[1].equalsIgnoreCase("false")) {
-							if(args[0].matches("^[0-9]*$")) {
-								if(Integer.parseInt(args[0]) > 0) {
-									DataStorage.debug = false;
-									thisway(sender, args);
-									return true;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Teleportation distance must be more than 0!");
-									return false;
-								}
-							} else {
-								sender.sendMessage(ChatColor.RED + "Invalid teleportation distance! Not a number!");
-								return false;
-							}
-						} else {
-							sender.sendMessage(ChatColor.RED + "Invalid second argument!");
-							return false;
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use Debug Mode!");
-						return true;
-					}
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if(!(sender instanceof Player)) {
+			System.out.print("[Thisway] Only players can use Thisway!");
+			return true;
+		}
+		
+		Player playerSender = (Player) sender;
+		if(playerSender.hasPermission("thisway.use") != true) {
+			sender.sendMessage(ChatColor.RED + "You do not have permission to use Thisway!");
+			return true;
+		}
+		
+		if(args.length == 0 || args.length > 2) {
+			sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
+			return false;
+		}
+		
+		if(!(args[0].matches("^[0-9]*$")) || Integer.parseInt(args[0]) == 0) {
+			sender.sendMessage(ChatColor.RED + "Invalid teleportation distance!");
+			return false;
+		}
+		
+		switch(args.length) {
+			case 1:
+				DataStorage.debug = false;
+				thisway(sender, args);
+				return true; // No break needed because the method returns before any further command can be reached.
+			case 2:
+				if(args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("false")) {
+					DataStorage.debug = true;
+					
+					sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ===");
+					sender.sendMessage("Plugin Version: " + DataStorage.localVersion);
+					thisway(sender, args);
+					sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
+					sender.sendMessage("Teleport successful.");
+					
+					return true;
 				} else {
-					sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
+					sender.sendMessage(ChatColor.RED + "Invalid debug argument!");
 					return false;
 				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "You don't have the right permissions to use this command!");
-				return true;
-			}
-		} else {
-			System.out.print("[Thisway] Only players can use this command!");
-			return true;
+			default:
+				sender.sendMessage(ChatColor.RED + "Invalid number of arguments!");
+				return false;
 		}
 	}
 	
