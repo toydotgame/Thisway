@@ -17,6 +17,13 @@ This plugin was developed primarily for 1.6.4 Spigot. I doubt Thisway will be co
 I can only guarantee that Thisway will work for 1.6.4, but any other versions are an added bonus - yet do not expect that I will work on compatibility with these newer versions.
 
 ## Changelog
+### Release 1.3.1
+* Optimised Debug Mode to have its data return function based off of one single `if()`, instead of multiple throughout the code. (Hopefully cutting down on a lot of extra `if()`-checking on the server's part)
+* Optimised command syntax checker. It's much better now.
+* Optimised block safety detector at the end of the main teleportation method so that a lot of code isn't run if it isn't needed (in the case that the teleportation destination is unsafe).
+* Debug Mode's data rounders and other calculations are only performed if needed (e.g: only if the Debug Mode is on), and also no extra Debug-Mode-only variables are used. (Should save RAM on the server-side)
+* Cut down on source code filesize.
+
 ### Release 1.3
 * Optimised Debug Mode's scripts for the player's facing direction. (Removed useless `if()` statements)
 * Plugin loading in the console is more truthful to the actual loading sequence.
