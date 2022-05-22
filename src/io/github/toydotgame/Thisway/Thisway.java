@@ -11,20 +11,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/* 
+ * CREATED: 2020-12-26
+ * AUTHOR: toydotgame
+ * This is the main class run by the `/thisway` command. 
+ */
+
 public class Thisway implements CommandExecutor {
 	@Override
-	/* 
-	 * The onCommand() method acts as a command validity check and Debug Mode script.
-	 * It'll check for the following:
-	 * - The sender is a player.
-	 * - The sender has the `thisway.use` permission. It'll also check for `thisway.debug` if Debug Mode is specified in-game.
-	 * - The sender uses 1 argument and that 1 argument is a number. It'll check that the second argument is "true" or "false" if there's 2 arguments.
-	 * - Argument 1 _is not_ 0.
-	 * 
-	 * If the command itself is written incorrectly, onCommand() will return false, and Spigot prints usage.
-	 * If the command _is_ written right, but something else isn't right, Thisway will return true but not run the next part of the code:
-	 * The thisway() method.
-	 */
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(!(sender instanceof Player)) {
 			System.out.print("[Thisway] Only players can use Thisway!");
@@ -51,7 +45,7 @@ public class Thisway implements CommandExecutor {
 			case 1:
 				DataStorage.debug = false;
 				thisway(sender, args);
-				return true; // No break needed because the method returns before any further command can be reached.
+				return true;
 			case 2:
 				if(args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("false")) {
 					DataStorage.debug = true;
@@ -74,19 +68,11 @@ public class Thisway implements CommandExecutor {
 	}
 	
 	@SuppressWarnings("deprecation")
-	/*
-	 * Any variables with "debug" and "humanReadable" in them are used only for readability in Debug Mode and the console respectively.
-	 * Thisway will **always** use exact teleportation to the whatever-th decimal place that Spigot provides.
-	 */
 	public void thisway(CommandSender sender, String[] args) {
-		Player player = (Player) sender; // This gives us a "player" variable of type Player. We use it to get location data.
+		Player player = (Player) sender;
 		
-		/*
-		 * The yaw is used to get the cardinal direction of the player.
-		 * Both pitch and yaw are used to preserve the camera's angle from pre-TP to post-TP locations, improving the overall quality of teleporting.
-		 */
 		float yaw = player.getEyeLocation().getYaw();
-		if(DataStorage.debug == true) { // Debug Mode will print data to chat if it's turned on.
+		if(DataStorage.debug == true) {
 			sender.sendMessage("Player Yaw: " + String.valueOf(rounder(yaw)));
 		}
 		float pitch = player.getEyeLocation().getPitch();
@@ -95,7 +81,7 @@ public class Thisway implements CommandExecutor {
 		}
 		
 		if(yaw < 0) {
-			yaw += 360; // This makes the next if() set have workable coords.
+			yaw += 360;
 		}
 		if(yaw >= 315 || yaw < 45) {
 			DataStorage.facing = "SOUTH";
@@ -111,17 +97,16 @@ public class Thisway implements CommandExecutor {
 		}
 		
 		Location location = player.getLocation();
-		double playerX = location.getX(); // getX() instead of getBlockX() returns a double, which has decimal exacts for coords.
+		double playerX = location.getX();
 		int playerY = location.getBlockY();
 		double playerZ = location.getZ();
-		double debugX = rounder(playerX); // rounder() rounds to 5 decimal places, like in F3.
+		double debugX = rounder(playerX);
 		double debugZ = rounder(playerZ);
 		
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Player Position: " + debugX + ", " + playerY + ", " + debugZ);
 		}
 
-		// This will turn the number arguments into an X or Z value to be modified either positively or negatively.
 		if(DataStorage.facing == "NORTH") {
 			DataStorage.xModDistance = 0;
 			DataStorage.zModDistance = Integer.parseInt("-" + args[0]);
@@ -145,10 +130,6 @@ public class Thisway implements CommandExecutor {
 			sender.sendMessage("New Player Position (To TP to): " + debugNewX + ", " + playerY + ", " + debugNewZ);
 		}
 		
-		/*
-		 * The current world is needed to create a Location variable to TP to.
-		 * This also allows support for multiple dimensions and indirect Multiverse support.
-		 */
 		String worldName = player.getLocation().getWorld().getName();
 		if(DataStorage.debug == true) {
 			sender.sendMessage("Current World: " + worldName);
@@ -168,23 +149,15 @@ public class Thisway implements CommandExecutor {
 			sender.sendMessage("Is new head location safe? (true/false): " + newHeadLocationIsSafe);
 		}
 		
-		/*
-		 * Here's the final teleportation segment. It will check that:
-		 * - The new head location won't cause the player to suffocate.
-		 * - The new standing location isn't air.
-		 *     - If it _is_ air, a glass block will be placed.
-		 * 
-		 * If the new location is safe, the player is teleported.
-		 */
 		if(newHeadLocationIsSafe == true) {
 			if(newStandingLocation.getBlock().getType() == Material.AIR) {
-				player.getWorld().getBlockAt(newStandingLocation).setTypeId(20); // ID 20 is a Glass Block.
+				player.getWorld().getBlockAt(newStandingLocation).setTypeId(20);
 			}
 			
 			Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch);
 			player.teleport(newLocation);
 			
-			if(DataStorage.debug != true) { // If debug is on, the success message gets sent after thisway() back in the onCommand() launcher. If debug mode is off, it'll be printed from this sendMessage() command.
+			if(DataStorage.debug != true) {
 				sender.sendMessage("Teleport successful.");
 			}
 			

@@ -1,5 +1,11 @@
 package io.github.toydotgame.Thisway;
 
+/* 
+ * CREATED: 2020-12-26
+ * AUTHOR: toydotgame
+ * A class dedicated to storing public variables. It's easier than dealing with the mess it creates in the main command class.
+ */
+
 public class DataStorage {
 	public static String localVersion;
 
