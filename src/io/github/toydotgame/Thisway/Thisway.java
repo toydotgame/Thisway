@@ -72,104 +72,68 @@ public class Thisway implements CommandExecutor {
 		Player player = (Player) sender;
 		
 		float yaw = player.getEyeLocation().getYaw();
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Yaw: " + String.valueOf(rounder(yaw)));
-		}
 		float pitch = player.getEyeLocation().getPitch();
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Pitch: " + String.valueOf(rounder(pitch)));
-		}
 		
 		if(yaw < 0) {
-			yaw += 360;
+			yaw += 360; // Adjust yaw to be a positive number. 
 		}
+		// The `ModDistance` coordinates are relative coordinates to adjust the actual position of the player by.
 		if(yaw >= 315 || yaw < 45) {
 			DataStorage.facing = "SOUTH";
+			DataStorage.xModDistance = 0;
+			DataStorage.zModDistance = Integer.parseInt(args[0]);
 		} else if(yaw < 135) {
 			DataStorage.facing = "WEST";
+			DataStorage.xModDistance = Integer.parseInt("-" + args[0]);
+			DataStorage.zModDistance = 0;
 		} else if(yaw < 225) {
 			DataStorage.facing = "NORTH";
+			DataStorage.xModDistance = 0;
+			DataStorage.zModDistance = Integer.parseInt("-" + args[0]);
 		} else if(yaw < 315) {
 			DataStorage.facing = "EAST";
-		}
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Facing: " + DataStorage.facing);
+			DataStorage.xModDistance = Integer.parseInt(args[0]);
+			DataStorage.zModDistance = 0;
 		}
 		
 		Location location = player.getLocation();
 		double playerX = location.getX();
 		int playerY = location.getBlockY();
 		double playerZ = location.getZ();
-		double debugX = rounder(playerX);
-		double debugZ = rounder(playerZ);
-		
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Player Position: " + debugX + ", " + playerY + ", " + debugZ);
-		}
-
-		if(DataStorage.facing == "NORTH") {
-			DataStorage.xModDistance = 0;
-			DataStorage.zModDistance = Integer.parseInt("-" + args[0]);
-		} else if(DataStorage.facing == "SOUTH") {
-			DataStorage.xModDistance = 0;
-			DataStorage.zModDistance = Integer.parseInt(args[0]);
-		} else if(DataStorage.facing == "EAST") {
-			DataStorage.xModDistance = Integer.parseInt(args[0]);
-			DataStorage.zModDistance = 0;
-		} else if(DataStorage.facing == "WEST") {
-			DataStorage.xModDistance = Integer.parseInt("-" + args[0]);
-			DataStorage.zModDistance = 0;
-		}
 		
 		double playerModifiedX = playerX + DataStorage.xModDistance;
 		double playerModifiedZ = playerZ + DataStorage.zModDistance;
 		
-		double debugNewX = rounder(playerModifiedX);
-		double debugNewZ = rounder(playerModifiedZ);
-		if(DataStorage.debug == true) {
-			sender.sendMessage("New Player Position (To TP to): " + debugNewX + ", " + playerY + ", " + debugNewZ);
-		}
-		
 		String worldName = player.getLocation().getWorld().getName();
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Current World: " + worldName);
-		}		
-		
-		int playerNewHeadY = playerY + 1;
-		Location newHeadLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerNewHeadY, playerModifiedZ, yaw, pitch);
-		if(DataStorage.debug == true) {
-			sender.sendMessage("New Player Head Location Block Type: " + newHeadLocation.getBlock().getType());
-		}
-		
-		int playerStandingOnBlockY = playerY - 1;
-		Location newStandingLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerStandingOnBlockY, playerModifiedZ, yaw, pitch);
+		Location newHeadLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY + 1, playerModifiedZ, yaw, pitch);
+		Location newStandingLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY - 1, playerModifiedZ, yaw, pitch);
 		
 		boolean newHeadLocationIsSafe = Arrays.asList(DataStorage.safeBlocks).contains(String.valueOf(newHeadLocation.getBlock().getType()));
-		if(DataStorage.debug == true) {
-			sender.sendMessage("Is new head location safe? (true/false): " + newHeadLocationIsSafe);
+		if(newHeadLocationIsSafe == false) {
+			sender.sendMessage(ChatColor.RED + "New location is inside a block!");
+			return;
 		}
 		
-		if(newHeadLocationIsSafe == true) {
-			if(newStandingLocation.getBlock().getType() == Material.AIR) {
-				player.getWorld().getBlockAt(newStandingLocation).setTypeId(20);
-			}
-			
-			Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch);
-			player.teleport(newLocation);
-			
-			if(DataStorage.debug != true) {
-				sender.sendMessage("Teleport successful.");
-			}
-			
-			int humanReadableX = (int) playerX;
-			int humanReadableZ = (int) playerZ;
-			int humanReadableNewX = (int) playerModifiedX;
-			int humanReadableNewZ = (int) playerModifiedZ;
-			
-			System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + humanReadableX + ", " + playerY + ", " + humanReadableZ + " to " + humanReadableNewX + ", " + playerY + ", " + humanReadableNewZ + ".");
-		} else {
-			sender.sendMessage(ChatColor.RED + "New location is inside a block!");
+		if(newStandingLocation.getBlock().getType() == Material.AIR) {
+			player.getWorld().getBlockAt(newStandingLocation).setTypeId(20);
 		}
+		
+		Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch);
+		player.teleport(newLocation);
+		
+		if(DataStorage.debug == false) {
+			sender.sendMessage("Teleport successful.");
+		} else {
+			sender.sendMessage("Player Yaw: " + String.valueOf(rounder(yaw)));
+			sender.sendMessage("Player Pitch: " + String.valueOf(rounder(pitch)));
+			sender.sendMessage("Player Facing: " + DataStorage.facing);
+			sender.sendMessage("Player Position: " + rounder(playerX) + ", " + playerY + ", " + rounder(playerZ));
+			sender.sendMessage("New Player Position: " + rounder(playerModifiedX) + ", " + playerY + ", " + rounder(playerModifiedZ));
+			sender.sendMessage("Current World: " + worldName);
+			sender.sendMessage("New Player Head Location Block Type: " + newHeadLocation.getBlock().getType());
+			sender.sendMessage("Is new head location safe? (true/false): " + newHeadLocationIsSafe);
+		}
+		System.out.print("[Thisway] " + player.getName() + " teleported " + args[0] + " blocks, from " + (int) playerX + ", " + playerY + ", " + (int) playerZ + " to " + (int) playerModifiedX + ", " + playerY + ", " + (int) playerModifiedZ + ".");
 	}
 	
 	public static double rounder(double value) {
