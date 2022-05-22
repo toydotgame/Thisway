@@ -13,8 +13,8 @@ All of the above can be found on the [wiki](https://github.com/Toydotgame/Thiswa
 
 ## Version
 Latest versions always come first to the [Releases](https://github.com/Toydotgame/Thisway/releases) tab.
-This plugin was developed primarily for 1.6.4 Spigot. I doubt Thisway will be compatible with Bukkit.
-I can only guarantee that Thisway will work for 1.6.4, but any other versions are an added bonus - yet do not expect that I will work on compatibility with these newer versions.
+This plugin was developed primarily for 1.6.4 Spigot. It should technically work on Bukkit, and it should work on any more modern version of Spigot.
+I will only provide support for Spigot, however. Again, Bukkit _should_ technically work, and I'd expect it to – but I won't go out of my way to make sure it does.
 
 ## Changelog
 ### Release 1.3.1
