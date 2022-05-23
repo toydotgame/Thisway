@@ -47,7 +47,7 @@ public class Thisway implements CommandExecutor {
 				thisway(sender, args);
 				return true;
 			case 2:
-				if(args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("false")) {
+				if(args[1].equalsIgnoreCase("true")) {
 					DataStorage.debug = true;
 					
 					sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG START ===");
@@ -56,6 +56,10 @@ public class Thisway implements CommandExecutor {
 					sender.sendMessage(ChatColor.YELLOW + "=== THISWAY DEBUG END ===");
 					sender.sendMessage("Teleport successful.");
 					
+					return true;
+				} else if(args[1].equalsIgnoreCase("false")) {
+					DataStorage.debug = false;
+					thisway(sender, args);
 					return true;
 				} else {
 					sender.sendMessage(ChatColor.RED + "Invalid debug argument!");
@@ -124,6 +128,7 @@ public class Thisway implements CommandExecutor {
 		if(DataStorage.debug == false) {
 			sender.sendMessage("Teleport successful.");
 		} else {
+			sender.sendMessage("Debug Mode: " + DataStorage.debug);
 			sender.sendMessage("Player Yaw: " + String.valueOf(rounder(yaw)));
 			sender.sendMessage("Player Pitch: " + String.valueOf(rounder(pitch)));
 			sender.sendMessage("Player Facing: " + DataStorage.facing);
