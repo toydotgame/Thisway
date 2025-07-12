@@ -71,7 +71,6 @@ public class Thisway implements CommandExecutor {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void thisway(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		
@@ -119,7 +118,7 @@ public class Thisway implements CommandExecutor {
 		}
 		
 		if(newStandingLocation.getBlock().getType() == Material.AIR) {
-			player.getWorld().getBlockAt(newStandingLocation).setTypeId(20);
+			player.getWorld().getBlockAt(newStandingLocation).setType(Material.GLASS);
 		}
 		
 		Location newLocation = new Location(Bukkit.getWorld(worldName), playerModifiedX, playerY, playerModifiedZ, yaw, pitch);
