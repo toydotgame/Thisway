@@ -12,6 +12,9 @@ public final class Thisway extends JavaPlugin {
 	 */
 	@Override
 	public void onEnable() {
+		UpdateChecker updates = new UpdateChecker(this);
+		updates.checkForUpdates();
+		
 		this.getLogger().info("Enabled!");
 	}
 }
