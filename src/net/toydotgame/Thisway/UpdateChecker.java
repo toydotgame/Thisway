@@ -14,24 +14,10 @@ import org.bukkit.Server;
  * is used in plugin init and is left to be discarded after that.
  */
 final class UpdateChecker {
-	// Instance fields:
-	final private Thisway plugin;
-	final private Logger logger;
-	final private String localVersion;
+	private UpdateChecker() {} // Static class
 	
-	// Constants:
 	private static final String RESOURCE_ID = "87115";
 	private static final String SPIGOT_API = "https://api.spigotmc.org/legacy/update.php?resource=";
-	
-	/**
-	 * Creates a new update checker instance.
-	 * @param self {@link org.bukkit.plugin.java.JavaPlugin JavaPlugin} instance
-	 */
-	UpdateChecker(Thisway self) {
-		plugin = self;
-		logger = plugin.getLogger();
-		localVersion = plugin.getDescription().getVersion(); // We will assume version strings are 3 dot-delimited numbers
-	}
 	
 	/**
 	 * Fetches the latest version from the SpigotMC API on an async Bukkit Task
@@ -40,7 +26,7 @@ final class UpdateChecker {
 	 * will be filled with the value of the latest version string from the
 	 * SpigotMC API
 	 */
-	private void getLatestVersion(Consumer<String> consumer) {
+	private static void getLatestVersion(Thisway plugin, Consumer<String> consumer) {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			String latest = null;
 			try(Scanner s = new Scanner(new URL(SPIGOT_API+RESOURCE_ID).openStream())) {
@@ -65,8 +51,11 @@ final class UpdateChecker {
 	 * For cases where the API fetch fails, or checking the greater version
 	 * fails, respective messages are printed to the console.
 	 */
-	void checkForUpdates() {
-		getLatestVersion(latestVersion -> {
+	static void checkForUpdates(Thisway plugin) {
+		Logger logger = plugin.getLogger();
+		String localVersion = plugin.getDescription().getVersion(); // We will assume version strings are dot-delimited numbers
+		
+		getLatestVersion(plugin, latestVersion -> {
 			if(latestVersion == null) { // Catch the null value from getLatestVersion()'s error case:
 				logger.warning("Couldn't fetch the latest version!");
 				return;
@@ -98,7 +87,7 @@ final class UpdateChecker {
 	 * @return Reference to the greater version number {@code String} object, or
 	 * {@code null} if the inputs are invalid/equal
 	 */
-	private String getGreaterVersion(String v1Str, String v2Str) {
+	private static String getGreaterVersion(String v1Str, String v2Str) {
 		String[] v1 = v1Str.split("\\."), v2 = v2Str.split("\\.");
 		
 		for(int i = 0; i < Math.min(v1.length, v2.length); i++) {
