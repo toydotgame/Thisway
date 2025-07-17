@@ -73,15 +73,19 @@ public final class UpdateChecker {
 				return;
 			}
 			
+			// Die if we don't have version alerts enabled:
+			if(!Configurator.fetch(Option.VERSION_ALERTS)) return;
+			
 			// If not up-to-date, are we ahead or behind?:
 			String greaterVersion = getGreaterVersion(INSTALLED_VERSION, SPIGOTMC_VERSION);
 			if(greaterVersion == INSTALLED_VERSION) {
 				log.fine("Local version is greater than the one found on SpigotMC");
 			} else if(greaterVersion == SPIGOTMC_VERSION) {
+				String message = "Newer version found on SpigotMC (v"+SPIGOTMC_VERSION+")! You are running v"+INSTALLED_VERSION;					
 				// Broadcast to console and ops:
-				Bukkit.getServer().broadcast("[Thisway] "+ChatColor.YELLOW
-					+"Newer version found on SpigotMC (v"+SPIGOTMC_VERSION+")! You are running v"+INSTALLED_VERSION,
-					Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
+				if(Configurator.fetch(Option.BROADCAST_VERSION_ALERTS))
+					Bukkit.getServer().broadcast("[Thisway] "+ChatColor.YELLOW+message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
+				else log.warning(message);
 			} else {
 				log.warning("Couldn't determine the latest version out of these two: "
 					+"v"+INSTALLED_VERSION+" (local), v"+SPIGOTMC_VERSION+" (SpigotMC)");

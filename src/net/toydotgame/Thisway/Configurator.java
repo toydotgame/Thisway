@@ -1,6 +1,6 @@
 package net.toydotgame.Thisway;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -12,7 +12,7 @@ final class Configurator {
 	
 	private static Map<Option, Boolean> defaults = loadDefaults();
 	private static Map<Option, Boolean> loadDefaults() {
-		Map<Option, Boolean> map = new HashMap<Option, Boolean>();
+		Map<Option, Boolean> map = new LinkedHashMap<Option, Boolean>();
 		
 		map.put(Option.VERSION_ALERTS, true);
 		map.put(Option.BROADCAST_VERSION_ALERTS, true);
