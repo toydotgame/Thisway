@@ -2,6 +2,7 @@ package net.toydotgame.Thisway;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -38,6 +39,9 @@ public final class Thisway extends JavaPlugin {
 		// command - command object corresponding to entry in plugin.yml
 		// label - alias used (/thisway or /tw)
 		// args[] - what it says on the tin
+		for(PermissionAttachmentInfo i : sender.getEffectivePermissions())
+			if(i.getPermission().startsWith("thisway"))
+				sender.sendMessage(i.getPermission()+": "+i.getValue());
 		return false;
 	}
 }

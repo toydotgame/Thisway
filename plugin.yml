@@ -6,19 +6,21 @@ author: toydotgame
 website: toydotgame.net
 prefix: Thisway
 commands:
-   thisway:
-      description: Teleport the player a select amount of blocks in the direction they're facing. Specify thisway.debug 
-      aliases: tw
-      usage: "/<command> <distance> [true|false]"
-      # Permissions are handled manually
+  thisway:
+    description: Teleport the player a select amount of blocks in the direction they're facing.
+    aliases: tw
+    usage: "/<command> <distance> [true|false]"
+# Permissions are handled manually
 permissions:
-   thisway.all:
-      children:
-         thisway.use: true
-         thisway.debug: true
-   thisway.use:
-      description: Allows use of Thisway.
-      default: op
-   thisway.debug:
-      description: Allows use of Debug Mode in Thisway.
-      default: op
+  thisway.debug:
+    description: Allows teleportation and use of debug mode/getting plugin information in Thisway.
+    default: op
+    children:
+      thisway.teleport: true
+      thisway.about: true
+  thisway.teleport:
+    description: Allows basic teleportation using Thisway.
+    default: op
+  thisway.about:
+    description: Allows only the usage of the about command to get plugin info and check operator status.
+    default: true
