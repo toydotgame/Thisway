@@ -13,8 +13,12 @@ import net.toydotgame.Thisway.commands.TeleportCommand;
 
 /**
  * Main class for Spigot hooks to execute our code starting from.
+ * <dt><b>Created on:</b></dt><dd>2020-12-26<br>
+ * Originally as {@code io.github.toydotgame.Thisway.Main}</dd>
+ * <dt><b>Re-created on:</b></dt><dd>2025-07-15</dd>
+ * @author toydotgame
  */
-public class Thisway extends JavaPlugin {
+public final class Thisway extends JavaPlugin {
 	// Don't create a constructor. Spigot will run the default JavaPlugin()
 	// constructor instead and that's all we really need
 	

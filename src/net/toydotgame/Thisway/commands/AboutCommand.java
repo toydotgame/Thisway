@@ -6,6 +6,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import net.toydotgame.Thisway.Thisway;
 
+/**
+ * Static class to handle the {@code /thisway about} command, that prints
+ * information about the executor and the plugin.
+ * <dt><b>Created on:</b></dt><dd>2025-07-15</dd>
+ * @author toydotgame
+ */
 public final class AboutCommand {
 	private AboutCommand() {} // Static class
 	private static CommandSender sender;
@@ -16,7 +22,7 @@ public final class AboutCommand {
 	 * @param sender {@link org.bukkit.command.CommandSender CommandSender} to
 	 * speak to
 	 * @param args Copy of {@link
-	 * Thisway#onCommand(CommandSender, org.bukkit.command.Command, String, String[])
+	 * Thisway#onCommand(CommandSender, Command, String, String[])
 	 * onCommand(...)}'s args
 	 * @return {@code true} for normal execution, {@code false} for a syntax
 	 * error (meaning that one-liner {@code return parseAndRun(...)}s are
@@ -26,11 +32,12 @@ public final class AboutCommand {
 	public static boolean parseAndRun(CommandSender sender, String[] args) {
 		AboutCommand.sender = sender;
 		
+		// CHECK: Only 1 argument (not 2) for about
 		if(args.length != 1)
 			return Thisway.syntaxError(sender, "Too many arguments!");
 		
-		main();
-		
+		// Syntax good, run main:
+		main();		
 		return true;
 	}
 	
