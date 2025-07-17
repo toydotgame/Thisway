@@ -34,6 +34,10 @@ public final class AboutCommand {
 		return true;
 	}
 	
+	/**
+	 * Print some version information, and fetch permissions for this plugin,
+	 * listing which the player does and doesn't have.
+	 */
 	private static void main() {
 		printRule("Thisway");
 		
@@ -58,10 +62,22 @@ public final class AboutCommand {
 		printRule();
 	}
 	
+	/**
+	 * Prints a key-value pair to chat as a bold key with a dimmed value.
+	 * @param key Name of the thing
+	 * @param value Value of the thing
+	 */
 	private static void printNamedValue(String key, String value) {
 		sender.sendMessage(ChatColor.BOLD+key+":"+ChatColor.RESET+" "+ChatColor.GRAY+value);
 	}
 	
+	/**
+	 * Print a horizontal rule to chat. Works best with strings that
+	 * <i>aren't</i> super long and fill most of a line.
+	 * @param optionalText Text to print in the middle of the horizontal line
+	 * (i.e. as a heading/title). If this string is empty, no text is overlaid
+	 * @see #printRule()
+	 */
 	private static void printRule(String optionalText) {
 		String hr = "-----------------------------------------------------"; // Assumes default chat width
 		if(optionalText.length() > 0) {
@@ -74,10 +90,21 @@ public final class AboutCommand {
 		}
 		sender.sendMessage(ChatColor.YELLOW+hr);
 	}
+	/**
+	 * Overload for {@link #printRule(String)} that passes an empty string to
+	 * {@code printRule(...)} to accomplish drawing a plain ol' rule with no
+	 * text.
+	 */
 	private static void printRule() {
 		printRule("");
 	}
 	
+	/**
+	 * Converts an input boolean value to a coloured text string "Yes" or "No".
+	 * @param b Input formula or expression, or boolean constant to evaluate
+	 * @return A green "Yes" for printing to chat if {@code b == true}, or a red
+	 * "No" if {@code b == false}
+	 */
 	private static String boolToWord(boolean b) {
 		ChatColor r = ChatColor.RED, g = ChatColor.GREEN;
 		return b ? g+"Yes":r+"No";
