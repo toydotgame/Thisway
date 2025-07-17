@@ -44,7 +44,7 @@ public final class Thisway extends JavaPlugin {
 		
 		permissionsReference = getDescription().getPermissions();
 		
-		this.getLogger().info("Enabled!");
+		getLogger().info("Enabled!");
 	}
 	
 	/**
