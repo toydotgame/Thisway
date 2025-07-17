@@ -1,5 +1,6 @@
 package net.toydotgame.Thisway.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -80,6 +81,7 @@ public final class TeleportCommand {
 		debug("Teleporting "+teleportDistance+" blocks...");
 		
 		// TODO: Option.LOG_TELEPORTS to log player who ran this, start and end positions (int coordinates r good)
+		//Bukkit.getLogger();
 	}
 	
 	private static void debug(String message) {
