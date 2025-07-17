@@ -1,37 +1,52 @@
 package net.toydotgame.Thisway;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.toydotgame.Thisway.commands.AboutCommand;
+import net.toydotgame.Thisway.commands.TeleportCommand;
 
 /**
  * Main class for Spigot hooks to execute our code starting from.
  */
-public final class Thisway extends JavaPlugin {
-	// No need to add a custom constructor/actually extend JavaPlugin. Just take
-	// an instance of class Thisway to be a plain ol' JavaPlugin
+public class Thisway extends JavaPlugin {
+	// Don't create a constructor. Spigot will run the default JavaPlugin()
+	// constructor instead and that's all we really need
+	
+	// Even though this class really isn't static, I'm going to treat it as such
+	// given AFAIK, you can't load the same plugin twice (or at least in any way
+	// where conflicts could arise). I think
+	public static UpdateChecker updates;
+	// Permissions can change after enable time, so store a pointer here and get
+	// it when needed:
+	private static List<Permission> permissionsReference;
 	
 	/**
 	 * Check for updates and load our config. Log a simple message to follow the
 	 * Spigot logs that only say that they've <i>begun</i> enabling Thisway.
-	 * {@inheritDoc}.
+	 * {@inheritDoc}, and after the constructor for this class.
 	 */
 	@Override
 	public void onEnable() {
-		UpdateChecker.checkForUpdates(this); // Not used after this point
+		updates = new UpdateChecker(this);
+		updates.logUpdates();
+		
 		Configurator.loadConfig(this);
+		
+		permissionsReference = getDescription().getPermissions();
 		
 		this.getLogger().info("Enabled!");
 	}
 	
 	/**
 	 * Main command execution logic.
-	 * TODO: Seperate class and .setExecutor()? Or just do parsing and
-	 * validation here and pass on teleportation and other exeuction to other
-	 * classes (probably do this)?
 	 * @return {@code true} for syntatically-correct inputs, {@code false} for
-	 * those which are not (thus prints usage)
+	 * incorrect inputs (thus prints usage)
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -39,9 +54,59 @@ public final class Thisway extends JavaPlugin {
 		// command - command object corresponding to entry in plugin.yml
 		// label - alias used (/thisway or /tw)
 		// args[] - what it says on the tin
-		for(PermissionAttachmentInfo i : sender.getEffectivePermissions())
-			if(i.getPermission().startsWith("thisway"))
-				sender.sendMessage(i.getPermission()+": "+i.getValue());
+		
+		// CHECK: Sender must be a player
+		if(!(sender instanceof Player)) {
+			sender.sendMessage("[Thisway] "+ChatColor.RED+"Thisway can only be run in-game!");
+			return true; // Not a syntax error
+		}
+		
+		// CHECK: Must have 1 or 2 args
+		if(args.length < 1 || args.length > 2)
+			return syntaxError(sender, "Wrong number of arguments!");
+		
+		// BRANCH: If we're running `about`, run and end here
+		if(args[0].equalsIgnoreCase("about"))
+			return AboutCommand.parseAndRun(sender, args);
+		
+		// Else, we're just doing a normal teleport
+		return TeleportCommand.parseAndRun((Player)sender, args);
+	}
+	
+	/**
+	 * Prints an error message in red to the console/player {@code sender}.
+	 * Returns {@code false} so that you can do {@code return syntaxError(...)}
+	 * in {@link #onCommand(CommandSender, Command, String, String[])
+	 * onCommand(...)} as a one-liner.
+	 * @param sender {@link org.bukkit.command.CommandSender CommandSender} to
+	 * send this error to
+	 * @param message Error message
+	 * @return {@code false}
+	 */
+	public static boolean syntaxError(CommandSender sender, String message) {
+		sender.sendMessage(ChatColor.RED+message);
 		return false;
+	}
+	
+	/**
+	 * Returns a copy of {@link
+	 * org.bukkit.plugin.PluginDescriptionFile#getPermissions()
+	 * this.getDecription().getPermission()}, sorted alphabetically. The value
+	 * yield directly from {@code getPermissions()} isn't able to be sorted
+	 * because it is an object reference to the live server permissions in
+	 * memory. Therefore, when {@link #onEnable()} is reached for Thisway, we
+	 * store that reference statically, and then duplicate it as a new {@link
+	 * java.util.ArrayList} which we then sort and return.
+	 * @return Permissions from {@code plugin.yml}, sorted alphabetically
+	 */
+	public static List<Permission> getPluginPermissions() {
+		// Create a copy of the live permissions:
+		List<Permission> permissions = new ArrayList<Permission>(permissionsReference);
+		// Returned list has a random order, so fix it:
+		permissions.sort((a, b) -> {
+			return a.getName().compareTo(b.getName());
+		});
+		
+		return permissions;
 	}
 }

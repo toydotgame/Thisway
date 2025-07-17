@@ -3,76 +3,88 @@ package net.toydotgame.Thisway;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 
 /**
- * Simple update checkver for this plugin on the SpigotMC API. Only exists and
- * is used in plugin init and is left to be discarded after that.
+ * Simple update checkver for this plugin on the SpigotMC API.
  */
-final class UpdateChecker {
-	private UpdateChecker() {} // Static class
+public final class UpdateChecker {
+	// Instance fields:
+	public final String INSTALLED_VERSION;
+	private final Thisway PLUGIN_INSTANCE;
+	public boolean IS_UP_TO_DATE = false;
+	// Set later:
+	public String SPIGOTMC_VERSION;
 	
+	UpdateChecker(Thisway plugin) {
+		PLUGIN_INSTANCE = plugin;
+		INSTALLED_VERSION = plugin.getDescription().getVersion();
+	}
+	
+	// Constants:
 	private static final String RESOURCE_ID = "87115";
 	private static final String SPIGOT_API = "https://api.spigotmc.org/legacy/update.php?resource=";
 	
 	/**
-	 * Fetches the latest version from the SpigotMC API on an async Bukkit Task
-	 * thread, and passes it to the input lambda.
-	 * @param consumer Lambda that takes a single {@code String} argument, which
-	 * will be filled with the value of the latest version string from the
-	 * SpigotMC API
+	 * Asynchronously gets the latest plugin version string from the SpigotMC
+	 * legacy API. Runs an input function (no arguments or return) when the
+	 * request is done.
+	 * @param r {@link java.lang.Runnable Runnable} lambda to run when the API
+	 * request has finished. Think of this as the callback
 	 */
-	private static void getLatestVersion(Thisway plugin, Consumer<String> consumer) {
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-			String latest = null;
+	private void getLatestVersionFromAPI(Runnable r) {
+		Bukkit.getScheduler().runTaskAsynchronously(PLUGIN_INSTANCE, () -> {
 			try(Scanner s = new Scanner(new URL(SPIGOT_API+RESOURCE_ID).openStream())) {
-				if(s.hasNext()) latest = s.next();
+				if(s.hasNext()) SPIGOTMC_VERSION = s.next();
 			} catch(IOException e) {} // If we fail to get a meaningful response, we fall through with `null`
 			
-			// Then give the value we got to the lambda that called us:
-			consumer.accept(latest);
+			// Run the lambda:
+			r.run();
 		});
 	}
 	
 	/**
-	 * Checks for updates using {@link #getLatestVersion(Consumer)} and does the
-	 * following for the following cases:
-	 * <ul>
-	 * 	<li>Installed version &gt; SpigotMC version?: Prints console log (log
-	 * level FINE, so not even seen by default) stating such</li>
-	 * 	<li>Installed version = SpigotMC version?: Does nothing</li>
-	 * 	<li>Installed version &lt; SpigotMC version?: Prints console log (log
-	 * level WARNING) and messages all operators online</li>
-	 * </ul>
-	 * For cases where the API fetch fails, or checking the greater version
-	 * fails, respective messages are printed to the console.
+	 * Prints logs depending on if the provided plugin instance is ahead of,
+	 * behind, or equal to the plugin version found on SpigotMC.<br>
+	 * <br>
+	 * This method runs async, so as to not hurt server boot or {@code /reload}
+	 * performance.
+	 * @see #getLatestVersionFromAPI(Runnable)
 	 */
-	static void checkForUpdates(Thisway plugin) {
-		Logger logger = plugin.getLogger();
-		String localVersion = plugin.getDescription().getVersion(); // We will assume version strings are dot-delimited numbers
+	void logUpdates() {
+		Logger log = PLUGIN_INSTANCE.getLogger();
 		
-		getLatestVersion(plugin, latestVersion -> {
-			if(latestVersion == null) { // Catch the null value from getLatestVersion()'s error case:
-				logger.warning("Couldn't fetch the latest version!");
+		// getLatestVersionFromAPI(Runnable r) fetches the latest version and
+		// sets this instance's SPIGOTMC_VERSION field accordingly (can be null
+		// if failed). It then runs the input lambda as a kind of callback:
+		getLatestVersionFromAPI(() -> {
+			// We get null if the fetch failed:
+			if(SPIGOTMC_VERSION == null) {
+				log.warning("Couldn't fetch the latest version!");
 				return;
 			}
-			if(localVersion.equals(latestVersion)) return; // Skip further calculations
 			
-			String greaterVersion = getGreaterVersion(localVersion, latestVersion);
-			if(greaterVersion == localVersion) {
-				logger.fine("Local version is greater than the one found on SpigotMC");
-			} else if(greaterVersion == latestVersion) {
-				String message = "Newer version found on SpigotMC! (v"+latestVersion+") You are running v"+localVersion;
+			// Check if up-to-date:
+			if(INSTALLED_VERSION.equals(SPIGOTMC_VERSION)) {
+				IS_UP_TO_DATE = true;
+				return;
+			}
+			
+			// If not up-to-date, are we ahead or behind?:
+			String greaterVersion = getGreaterVersion(INSTALLED_VERSION, SPIGOTMC_VERSION);
+			if(greaterVersion == INSTALLED_VERSION) {
+				log.fine("Local version is greater than the one found on SpigotMC");
+			} else if(greaterVersion == SPIGOTMC_VERSION) {
 				// Broadcast to console and ops:
-				logger.warning(message);
-				Bukkit.getServer().broadcast("[Thisway] "+ChatColor.YELLOW+message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
+				Bukkit.getServer().broadcast("[Thisway] "+ChatColor.YELLOW
+					+"Newer version found on SpigotMC (v"+SPIGOTMC_VERSION+")! You are running v"+INSTALLED_VERSION,
+					Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
 			} else {
-				logger.warning("Couldn't determine the latest version out of these two: "
-					+"v"+localVersion+" (local), v"+latestVersion+" (SpigotMC)");
+				log.warning("Couldn't determine the latest version out of these two: "
+					+"v"+INSTALLED_VERSION+" (local), v"+SPIGOTMC_VERSION+" (SpigotMC)");
 			}
 		});
 	}

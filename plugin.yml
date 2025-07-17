@@ -9,7 +9,9 @@ commands:
   thisway:
     description: Teleport the player a select amount of blocks in the direction they're facing.
     aliases: tw
-    usage: "/<command> <distance> [true|false]"
+    usage:
+      - /<command> <distance> [debug|true]
+      - /<command> about
 # Permissions are handled manually
 permissions:
   thisway.debug:
