@@ -6,14 +6,20 @@ package net.toydotgame.Thisway;
  * <dt><b>Created on:</b></dt><dd>2025-07-15</dd>
  * @author toydotgame
  */
-enum Option {
-	VERSION_ALERTS("version-alerts"),
-	BROADCAST_VERSION_ALERTS("broadcast-version-alerts-to-ops"),
-	LOG_TELEPORTS("log-teleports-in-console");
+public enum Option {
+	VERSION_ALERTS("version-alerts", true),
+	BROADCAST_VERSION_ALERTS("in-game-version-alerts-to-ops", true),
+	LOG_TELEPORTS("log-teleports-in-console", false),
+	SUPPORT_BLOCKS("place-support-blocks", true);
 	
+	/**
+	 * The name of this option in YAML.
+	 */
 	final String yamlName;
+	final boolean defaultValue;
 	
-	Option(String string) { // Private
-		this.yamlName = string;
+	Option(String string, boolean defaultValue) { // Private
+		yamlName = string;
+		this.defaultValue = defaultValue;
 	} 
 }

@@ -7,19 +7,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 /**
  * Simple static class to load and manage Thisway's configuration.
  */
-final class Configurator {
+public final class Configurator {
 	private Configurator() {} // Static class
 	
-	private static Map<Option, Boolean> defaults = loadDefaults();
-	private static Map<Option, Boolean> loadDefaults() {
-		Map<Option, Boolean> map = new LinkedHashMap<Option, Boolean>();
-		
-		map.put(Option.VERSION_ALERTS, true);
-		map.put(Option.BROADCAST_VERSION_ALERTS, true);
-		map.put(Option.LOG_TELEPORTS, false);
-		
-		return map;
-	}
 	private static FileConfiguration config;
 	
 	/**
@@ -32,9 +22,11 @@ final class Configurator {
 	 */
 	static void loadConfig(Thisway plugin) {
 		config = plugin.getConfig();
+		if(config.getValues(true).size() == 0)
+			plugin.getLogger().info("config.yml does not exist! Creating one...");
 		
-		for(Option key : defaults.keySet())
-			config.addDefault(key.yamlName, defaults.get(key));
+		for(Option option : Option.values())
+			config.addDefault(option.yamlName, option.defaultValue);
 		
 		config.options().copyDefaults(true); // Save/append options to config file if they don't already exist
 		plugin.saveConfig(); // Write FileConfiguration to disk
@@ -51,7 +43,21 @@ final class Configurator {
 	 * @param option {@link Option} to look for
 	 * @return {@code true} or {@code false} depending on the user's setting
 	 */
-	static boolean fetch(Option option) {
+	public static boolean fetch(Option option) {
 		return config.getBoolean(option.yamlName);
+	}
+	
+	/**
+	 * Takes the loaded configuration file from memory, transmutes it to an
+	 * ordered {@link java.util.LinkedHashMap Map}, and returns it.
+	 * @return Thisway configuration names and their current values
+	 */
+	public static Map<String, Boolean> fetchAll() {
+		Map<String, Boolean> result = new LinkedHashMap<String, Boolean>();
+		config.getValues(true).forEach((k, v) -> {
+			result.put(k, (Boolean)v);
+		});
+		
+		return result;
 	}
 }

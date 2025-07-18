@@ -66,6 +66,8 @@ public final class AboutCommand {
 				boolToWord(sender.hasPermission(p)));
 		printNamedValue("Operator?", boolToWord(sender.isOp()));
 		
+		// TODO: Move current config from TeleportTest to here
+		
 		printRule();
 	}
 	
@@ -112,8 +114,7 @@ public final class AboutCommand {
 	 * @return A green "Yes" for printing to chat if {@code b == true}, or a red
 	 * "No" if {@code b == false}
 	 */
-	private static String boolToWord(boolean b) {
-		ChatColor r = ChatColor.RED, g = ChatColor.GREEN;
-		return b ? g+"Yes":r+"No";
+	static String boolToWord(boolean b) {
+		return b ? ChatColor.GREEN+"Yes":ChatColor.RED+"No";
 	}
 }

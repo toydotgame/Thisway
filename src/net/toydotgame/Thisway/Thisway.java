@@ -54,11 +54,6 @@ public final class Thisway extends JavaPlugin {
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		// sender - object associated with command sender (instanceof Player desired)
-		// command - command object corresponding to entry in plugin.yml
-		// label - alias used (/thisway or /tw)
-		// args[] - what it says on the tin
-		
 		// CHECK: Sender must be a player
 		if(!(sender instanceof Player)) {
 			sender.sendMessage("[Thisway] "+ChatColor.RED+"Thisway can only be run in-game!");
