@@ -87,10 +87,6 @@ public final class TeleportCommand {
 	private static void main(int teleportDistance) {
 		debug("Teleporting "+teleportDistance+" blocks...");
 		
-		// TODO: Option.LOG_TELEPORTS to log player who ran this, start and end positions (int coordinates r good)
-		//Bukkit.getLogger();
-		//SafeBlocks.contains(Block.getType());
-		
 		DirectionVector facing = new DirectionVector(player.getEyeLocation());
 		debug(ChatColor.BOLD+"Facing vector: Server-side values");
 		debug("    f="+facing.direction+", yaw="+facing.yaw+", pitch="+facing.pitch);
