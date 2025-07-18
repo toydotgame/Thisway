@@ -28,7 +28,7 @@ final class TeleportTests {
 		if(!test(
 			!destination.getBlock().getType().isSolid() && !destination.getBlock().isLiquid(),
 			"footIsSafeBlock",
-			"The destination is unsafe! (Probably a solid block)"
+			"The destination is unsafe! (Probably a solid block or liquid in the way)"
 		)) return false;		
 		if(!test(
 			!eye.getBlock().getType().isSolid(),

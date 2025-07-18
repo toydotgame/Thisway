@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
+import net.toydotgame.Thisway.Configurator;
 import net.toydotgame.Thisway.Thisway;
 
 /**
@@ -66,7 +67,11 @@ public final class AboutCommand {
 				boolToWord(sender.hasPermission(p)));
 		printNamedValue("Operator?", boolToWord(sender.isOp()));
 		
-		// TODO: Move current config from TeleportTest to here
+		sender.sendMessage((String)null);
+		sender.sendMessage(ChatColor.BOLD+"Configuration");
+		Configurator.fetchAll().forEach((k, v) -> {
+			printNamedValue(ChatColor.GRAY+"- "+ChatColor.ITALIC+k, boolToWord(v));
+		});
 		
 		printRule();
 	}

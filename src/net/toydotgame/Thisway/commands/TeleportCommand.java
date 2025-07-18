@@ -1,11 +1,13 @@
 package net.toydotgame.Thisway.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.toydotgame.Thisway.Configurator;
+import net.toydotgame.Thisway.Option;
 import net.toydotgame.Thisway.Thisway;
 
 /**
@@ -55,6 +57,8 @@ public final class TeleportCommand {
 		}
 		
 		// CHECK: Second argument is "debug" and not a legacy or invalid value
+		debugMode = false; // Debug mode status carries over from last execution
+		                   // (due to static field). So reset it
 		if(args.length == 2) {
 			switch(args[1].toLowerCase()) {
 				case "debug":
@@ -82,10 +86,6 @@ public final class TeleportCommand {
 	 */
 	private static void main(int teleportDistance) {
 		debug("Teleporting "+teleportDistance+" blocks...");
-		debug(ChatColor.BOLD+"Configuration:");
-		Configurator.fetchAll().forEach((k, v) -> {
-			debug("- "+k+": "+AboutCommand.boolToWord(v));
-		});
 		
 		// TODO: Option.LOG_TELEPORTS to log player who ran this, start and end positions (int coordinates r good)
 		//Bukkit.getLogger();
@@ -99,17 +99,19 @@ public final class TeleportCommand {
 		Location start = player.getLocation(); // Player location
 		defineDestination(facing, start, teleportDistance);
 		
-		
+		String teleportDistanceString = " ("+teleportDistance+" block"+(teleportDistance==1 ? "" : "s")+")"; // Used later
 		debug("Teleporting from: "+toBlockString(start));
-		debug("Teleporting to: "+toBlockString(destination)
-			+" ("+teleportDistance+" "+(teleportDistance==1 ? "block)" : "blocks)"));
+		debug("Teleporting to: "+toBlockString(destination)+teleportDistanceString);
 		debug("    Eye height: "+player.getEyeHeight());
 		
+		debug("");
 		debug(ChatColor.BOLD+"Safety tests:");
 		
 		// CHECK: If the destination is half in the ground, redefine everything
 		// to be 1 block up. If this breaks things further down, oh well, we tried.
-		if(!TeleportTests.testAndLogBoolean("feetInAir", !destination.getBlock().getType().isSolid())) {
+		boolean feetInNonSolid = TeleportTests.testAndLogBoolean("feetInNonSolid",
+			!destination.getBlock().getType().isSolid());
+		if(!feetInNonSolid) {
 			debug("    Destination is solid, attempting to move 1 block up");
 			start = start.add(0, 1, 0);
 			defineDestination(facing, start, teleportDistance); // Redefine destination
@@ -117,14 +119,32 @@ public final class TeleportCommand {
 		
 		TeleportTests tests = new TeleportTests(player, destination, destinationEye, destinationGround);
 		if(!tests.testAll()) return;
+		debug("");
+		
+		String playerName = player.getName();
+		String world = player.getWorld().getName();
+		debug("Player: "+playerName);
+		debug("World: "+world);
 		
 		player.teleport(destination);
+		
+		if(Configurator.fetch(Option.LOG_TELEPORTS))
+			/*Bukkit.getServer().broadcast(""+ChatColor.GRAY+ChatColor.ITALIC+"[Thisway: " // Concat empty string otherwise the `ChatColor`s clash
+				+playerName+" teleported from ("
+				+toBlockString(start.subtract(0, (feetInNonSolid ? 0 : 1), 0))+") to ("
+				+toBlockString(destination)+")"+teleportDistanceString+"]",
+				Server.BROADCAST_CHANNEL_ADMINISTRATIVE);*/
+			Bukkit.getLogger().info(playerName+" teleported from ("
+				+toBlockString(start.subtract(0, (feetInNonSolid ? 0 : 1), 0))+") to ("
+				+toBlockString(destination)+")"+teleportDistanceString);
+		
+		if(debugMode) player.sendMessage("Teleport complete");
 	}
 	
 	static void debug(String message) {
 		if(!debugMode) return;
 		
-		player.sendMessage(""+ChatColor.GRAY+ChatColor.ITALIC+message); // Concat empty string otherwise the `ChatColor`s clash
+		player.sendMessage(""+ChatColor.GRAY+ChatColor.ITALIC+message);
 	}
 	
 	private static String toBlockString(Location l) {
