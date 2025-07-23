@@ -23,8 +23,8 @@ public final class AboutCommand {
 	 * @param sender {@link org.bukkit.command.CommandSender CommandSender} to
 	 * speak to
 	 * @param args Copy of {@link
-	 * Thisway#onCommand(CommandSender, Command, String, String[])
-	 * onCommand(...)}'s args
+	 * Thisway#onCommand(CommandSender, org.bukkit.command.Command, String,
+	 * String[]) onCommand(...)}'s args
 	 * @return {@code true} for normal execution, {@code false} for a syntax
 	 * error (meaning that one-liner {@code return parseAndRun(...)}s are
 	 * possible.
@@ -32,6 +32,9 @@ public final class AboutCommand {
 	 */
 	public static boolean parseAndRun(CommandSender sender, String[] args) {
 		AboutCommand.sender = sender;
+		
+		// CHECK: Sender has permissions
+		if(!Thisway.testForPermission(sender, "about")) return true; // Not a syntax error
 		
 		// CHECK: Only 1 argument (not 2) for about
 		if(args.length != 1)

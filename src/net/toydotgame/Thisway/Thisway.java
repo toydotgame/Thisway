@@ -88,6 +88,22 @@ public final class Thisway extends JavaPlugin {
 	}
 	
 	/**
+	 * Checks if the provided {@link org.bukkit.entity.Player Player} has the
+	 * provided {@code thisway.<permission>}. If not, an error message is sent.
+	 * @param player Player to check for the given permission, and send an error
+	 * to if the permission check fails
+	 * @param permission Permission name (excluding "{@code thisway.}")
+	 * @return {@code true} if the player has the permission, {@code false} if
+	 * not
+	 */
+	public static boolean testForPermission(CommandSender player, String permission) {
+		if(player.hasPermission("thisway."+permission)) return true;
+		
+		player.sendMessage(ChatColor.RED+"You do not have the thisway."+permission+" permission!");
+		return false;
+	}
+	
+	/**
 	 * Returns a copy of {@link
 	 * org.bukkit.plugin.PluginDescriptionFile#getPermissions()
 	 * this.getDecription().getPermission()}, sorted alphabetically. The value

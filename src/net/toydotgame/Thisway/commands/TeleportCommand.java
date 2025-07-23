@@ -3,7 +3,6 @@ package net.toydotgame.Thisway.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.toydotgame.Thisway.Configurator;
@@ -34,11 +33,15 @@ public final class TeleportCommand {
 	 * 	<li>By elimination, this command is a teleport command, not an about
 	 * command</li>
 	 * </ul>
+	 * However, we do <b>not</b> know whether or not—provided the player has
+	 * entered the correct syntax for enabling debug mode—the player has debug
+	 * permissions. Nor do we know if they have teleport permissions. Therefore,
+	 * these, and the first argument being ∈ℕ∖{0}, must be checked.
 	 * @param player {@link org.bukkit.entity.Player (Player)} casted {@link
 	 * org.bukkit.command.CommandSender CommandSender} instance to speak to
 	 * @param args Copy of {@link
-	 * Thisway#onCommand(CommandSender, Command, String, String[])
-	 * onCommand(...)}'s args
+	 * Thisway#onCommand(CommandSender, org.bukkit.command.Command, String,
+	 * String[]) onCommand(...)}'s args
 	 * @return {@code true} for normal execution, {@code false} for a syntax
 	 * error (meaning that one-liner {@code return parseAndRun(...)}s are
 	 * possible.
@@ -47,6 +50,9 @@ public final class TeleportCommand {
 	public static boolean parseAndRun(Player player, String[] args) {
 		TeleportCommand.player = player;
 		int distance = 0;
+		
+		// CHECK: Root teleport permission
+		if(!Thisway.testForPermission(player, "teleport")) return true; // Not a syntax error
 		
 		// CHECK: First argument is a positive int
 		try {
@@ -62,6 +68,9 @@ public final class TeleportCommand {
 		if(args.length == 2) {
 			switch(args[1].toLowerCase()) {
 				case "debug":
+					// CHECK: Player has permission to use debug mode
+					if(!Thisway.testForPermission(player, "debug")) return true;
+					
 					debugMode = true;
 					player.sendMessage("Debug mode enabled for this teleport");
 					break;
