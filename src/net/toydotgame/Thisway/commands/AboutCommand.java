@@ -10,7 +10,7 @@ import net.toydotgame.Thisway.Thisway;
 /**
  * Static class to handle the {@code /thisway about} command, that prints
  * information about the executor and the plugin.
- * <dt><b>Created on:</b></dt><dd>2025-07-15</dd>
+ * <dl><dt><b>Created on:</b></dt><dd>2025-07-15</dd></dl>
  * @author toydotgame
  */
 public final class AboutCommand {

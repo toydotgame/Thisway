@@ -10,7 +10,7 @@ import org.bukkit.Server;
 
 /**
  * Simple update checkver for this plugin on the SpigotMC API.
- * <dt><b>Created on:</b></dt><dd>2025-07-15</dd>
+ * <dl><dt><b>Created on:</b></dt><dd>2025-07-15</dd></dl>
  * @author toydotgame
  */
 public final class UpdateChecker {

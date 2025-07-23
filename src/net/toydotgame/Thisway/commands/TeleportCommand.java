@@ -11,9 +11,9 @@ import net.toydotgame.Thisway.Thisway;
 
 /**
  * Static class to handle the actual teleportation function of Thisway.
- * <dt><b>Created on:</b></dt><dd>2020-12-26<br>
+ * <dl><dt><b>Created on:</b></dt><dd>2020-12-26<br>
  * Originally as {@code io.github.toydotgame.Thisway.Thisway}</dd>
- * <dt><b>Re-created on:</b></dt><dd>2025-07-15</dd>
+ * <dt><b>Re-created on:</b></dt><dd>2025-07-15</dd></dl>
  * @author toydotgame
  */
 public final class TeleportCommand {
@@ -45,7 +45,7 @@ public final class TeleportCommand {
 	 * @return {@code true} for normal execution, {@code false} for a syntax
 	 * error (meaning that one-liner {@code return parseAndRun(...)}s are
 	 * possible.
-	 * @see #main()
+	 * @see #main(int)
 	 */
 	public static boolean parseAndRun(Player player, String[] args) {
 		TeleportCommand.player = player;
@@ -91,14 +91,12 @@ public final class TeleportCommand {
 	/**
 	 * Teleports the player {@code teleportDistance} blocks in the direction
 	 * they're facing
-	 * @param teleportDistance
+	 * @param teleportDistance Distance to teleport
 	 */
 	private static void main(int teleportDistance) {
 		debug("Teleporting "+teleportDistance+" blocks...");
 		
 		DirectionVector facing = new DirectionVector(player.getEyeLocation());
-		debug(ChatColor.BOLD+"Facing vector: Server-side values");
-		debug("    f="+facing.direction+", yaw="+facing.yaw+", pitch="+facing.pitch);
 		
 		// Define our positions to check stuff about:
 		Location start = player.getLocation(); // Player location
@@ -146,16 +144,51 @@ public final class TeleportCommand {
 		if(debugMode) player.sendMessage("Teleport complete");
 	}
 	
+	/**
+	 * Prints a debug message if debug mode is enabled.
+	 * @param message Message to print
+	 */
 	static void debug(String message) {
 		if(!debugMode) return;
 		
 		player.sendMessage(""+ChatColor.GRAY+ChatColor.ITALIC+message);
 	}
 	
+	/**
+	 * Acts as an alternative of {@link Location#toString()}. World and rotation
+	 * information, as well as the double precision decimals, and the formatting
+	 * of the regular Location String is cluttered and irrelevant when we just
+	 * want to print out a location as a coordinate in the current world.
+	 * @param l {@link Location} to use
+	 * @return String of X, Y, and Z coordinates of this Location, delimited by
+	 * "{@code , }"
+	 */
 	private static String toBlockString(Location l) {
 		return l.getBlockX()+", "+l.getBlockY()+", "+l.getBlockZ();
 	}
 	
+	/**
+	 * Redefines {@link #destination}, {@link #destinationEye}, and {@link
+	 * #destinationGround} in terms of the input {@link Location} {@code start}.
+	 * It applies a {@link DirectionVector} ({@code facing}, of magnitude {@code
+	 * distance}) to {@code start}, and applies the appropriate modifications to
+	 * the destination Location to yield the other two.<br>
+	 * <br>
+	 * It is useful to delegate this call to the method because these operations
+	 * are called twice:
+	 * <ol>
+	 * 	<li>(Always) when getting the teleport destination for the first time</li>
+	 * 	<li>(Only if {@link #destination} is an invalid spot) when the teleport
+	 * destination is clipped into terrain, we try moving it up by 1 block and
+	 * redefining it</li>
+	 * </ol>
+	 * @param facing {@link DirectionVector} to use as a mask/to create a
+	 * movement vector to determine <i>where</i> the destination is
+	 * @param start The player's current location
+	 * @param distance Distance the player is teleporting to. (How far away the
+	 * destination should be)
+	 * @see DirectionVector#createPositionVector(int)
+	 */
 	private static void defineDestination(DirectionVector facing, Location start, int distance) {
 		destination = start.clone()                                // Target location (=start+distance)
 			.add(facing.createPositionVector(distance));

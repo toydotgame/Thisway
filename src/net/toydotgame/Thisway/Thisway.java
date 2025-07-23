@@ -13,9 +13,9 @@ import net.toydotgame.Thisway.commands.TeleportCommand;
 
 /**
  * Main class for Spigot hooks to execute our code starting from.
- * <dt><b>Created on:</b></dt><dd>2020-12-26<br>
+ * <dl><dt><b>Created on:</b></dt><dd>2020-12-26<br>
  * Originally as {@code io.github.toydotgame.Thisway.Main}</dd>
- * <dt><b>Re-created on:</b></dt><dd>2025-07-15</dd>
+ * <dt><b>Re-created on:</b></dt><dd>2025-07-15</dd></dl>
  * @author toydotgame
  */
 public final class Thisway extends JavaPlugin {
