@@ -16,10 +16,24 @@ public enum Option {
 	 * The name of this option in YAML.
 	 */
 	final String yamlName;
-	final boolean defaultValue;
+	/**
+	 * The default value of this option if not set by the user.
+	 */
+	public final boolean defaultValue;
 	
 	Option(String string, boolean defaultValue) { // Private
 		yamlName = string;
 		this.defaultValue = defaultValue;
-	} 
+	}
+	
+	/**
+	 * Gets an {@link Option} by its {@link #yamlName} value.
+	 * @param name Name of the option in YAML
+	 * @return {@link Option} enum value if found, {@code null} if not
+	 */
+	public static Option get(String name) {
+		for(Option o : Option.values())
+			if(o.yamlName.equals(name)) return o;
+		return null;
+	}
 }

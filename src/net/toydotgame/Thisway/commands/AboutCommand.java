@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import net.toydotgame.Thisway.Configurator;
+import net.toydotgame.Thisway.Option;
 import net.toydotgame.Thisway.Thisway;
 
 /**
@@ -73,7 +74,12 @@ public final class AboutCommand {
 		sender.sendMessage((String)null);
 		sender.sendMessage(ChatColor.BOLD+"Configuration");
 		Configurator.fetchAll().forEach((k, v) -> {
-			printNamedValue(ChatColor.GRAY+"- "+ChatColor.ITALIC+k, boolToWord(v));
+			printNamedValue(ChatColor.GRAY+"- "+ChatColor.ITALIC+k,
+				boolToWord(v)+ChatColor.RESET+ChatColor.GRAY+ChatColor.ITALIC
+				+(Option.get(k)!=null // Catch NullPointerException
+					? " (defaults to "+boolToWord(Option.get(k).defaultValue)
+						+ChatColor.RESET+ChatColor.GRAY+ChatColor.ITALIC+")"
+					:""));
 		});
 		
 		printRule();
