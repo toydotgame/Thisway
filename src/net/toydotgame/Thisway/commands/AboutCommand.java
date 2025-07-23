@@ -53,15 +53,23 @@ public final class AboutCommand {
 	private static void main() {
 		printRule("Thisway");
 		
+		sender.sendMessage("(c) 2020, 2025 toydotgame");
+		sender.sendMessage(ChatColor.GRAY+String.join("\n"+ChatColor.RESET+ChatColor.GRAY,
+			ChatColor.ITALIC+"Thisway was developed from 2020-12-26 until 2025-07-xx by toydotgame. It has been used on at least 400 servers over its 4-year development lifecycle. Thank you to all of you who thought this little thing was cool enough to install and use. <3",
+			ChatColor.BOLD+"Attributions:",
+			"- toydotgame: Developer and maintainer (2020–2025)",
+			"- MatDvlp: Feature suggestions (logging improvements and multi-language) (2022)"));
+		sender.sendMessage((String)null); // Print an empty line because prepending '\n' doesn't work prettily
+		
 		sender.sendMessage(ChatColor.BOLD+"Thisway version");
 		printNamedValue(ChatColor.RESET+"- Local", "v"+Thisway.updates.INSTALLED_VERSION);
 		printNamedValue(ChatColor.RESET+"- Latest", "v"+Thisway.updates.SPIGOTMC_VERSION);
 		printNamedValue("Up to date?", boolToWord(Thisway.updates.IS_UP_TO_DATE));
-		sender.sendMessage((String)null); // Print an empty line because prepending '\n' doesn't work prettily
+		sender.sendMessage((String)null);
 		
 		printNamedValue("Minecraft version", "Release "+Bukkit.getBukkitVersion().split("-")[0]);
-		printNamedValue(ChatColor.RESET+"- Vendor", Bukkit.getBukkitVersion());
-		printNamedValue(ChatColor.RESET+"- Vendor source", Bukkit.getVersion().split(" ")[0]);
+		printNamedValue(ChatColor.RESET+"- Vendor version", Bukkit.getBukkitVersion());
+		printNamedValue(ChatColor.RESET+"- Vendor source version", Bukkit.getVersion().split(" ")[0]);
 		
 		sender.sendMessage((String)null);
 		sender.sendMessage(ChatColor.BOLD+"Permissions");
