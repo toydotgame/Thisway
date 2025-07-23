@@ -3,8 +3,10 @@ package net.toydotgame.Thisway.commands;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.toydotgame.Thisway.Configurator;
+import net.toydotgame.Thisway.Lang;
 import net.toydotgame.Thisway.Option;
 
 /**
@@ -59,30 +61,27 @@ class TeleportTests {
 		// CHECK: Destination is safe
 		if(!test(
 			!destination.getBlock().getType().isSolid() && !destination.getBlock().isLiquid(),
-			"footIsSafeBlock",
-			"The destination is unsafe! (Probably a solid block or liquid in the way)"
+			"footIsSafeBlock", "tp.error.foot"
 		)) return false;		
 		if(!test(
 			!eye.getBlock().getType().isSolid(),
-			"eyeIsNonSolid",
-			"The destination is unsafe! (Probably a solid block)"
+			"eyeIsNonSolid", "tp.error.eye"
 		)) return false;
 		
 		if(player.isFlying()) {
-			TeleportCommand.debug("Player is flying, ignoring support checks");
+			TeleportCommand.debug("checks.is-flying");
 			return true;
 		}
 		
 		// Set glass support block if desired:
 		if(Configurator.fetchToggle(Option.SUPPORT_BLOCKS)
 			&& !testAndLogBoolean("destGroundIsSolid", !ground.getBlock().isEmpty())) {
-			TeleportCommand.debug("    Destination isn't solid. Placing a support block");
+			TeleportCommand.debug("checks.support-placed");
 			ground.getBlock().setType(Material.GLASS);
 		}
 		// CHECK: If no block was placed, the destination ground must be safe
 		else if(!testAndLogBoolean("destHasSupport", ground.getBlock().getType().isSolid())) {
-			return error("The destination has no support blocks! "
-				+"If you have place-support-blocks enabled, a support block probably failed to place");
+			return error("tp.error.support-failed");
 		}
 		
 		return true;
@@ -104,10 +103,10 @@ class TeleportTests {
 	 * @param errorMessage Error message to print if the test fails
 	 * @return Whatever the value of {@code condition} is
 	 */
-	private boolean test(boolean condition, String name, String errorMessage) {
+	private boolean test(boolean condition, String name, String errorTranslationKey) {
 		testAndLogBoolean(name, condition);
 		
-		if(!condition) return error(errorMessage);		
+		if(!condition) return error(errorTranslationKey);		
 		return true;
 	}
 	
@@ -116,8 +115,8 @@ class TeleportTests {
 	 * @param message Message to print
 	 * @return {@code false}
 	 */
-	private boolean error(String message) {
-		player.sendMessage(ChatColor.RED+message);
+	private boolean error(String translationKey) {
+		player.sendMessage(ChatColor.RED+Lang.create(translationKey));
 		return false;
 	}
 	
@@ -132,8 +131,13 @@ class TeleportTests {
 	 * @return {@code condition}
 	 * @see #test(boolean, String, String)
 	 */
-	static boolean testAndLogBoolean(String name, boolean condition) {
-		TeleportCommand.debug(name+": "+AboutCommand.boolToWord(condition));
+	static boolean testAndLogBoolean(CommandSender sender, String name, boolean condition) {
+		AboutCommand.printValue(sender, "debug.checks.check",
+			name, AboutCommand.boolToWord(condition));
 		return condition;
+	}
+	
+	private boolean testAndLogBoolean(String name, boolean condition) {
+		return testAndLogBoolean(player, name, condition);
 	}
 }

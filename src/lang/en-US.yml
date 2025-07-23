@@ -77,7 +77,7 @@ boolean:
 # /thisway about chat text
 about:
   # Paragraph at the start detailing the plugin's history
-  spiel: Thisway was developed from 2020-12-26 until 2025-07-xx by toydotgame. It has been used on at least 400 servers over its 4-year development lifecycle. Thank you to all of you who thought this little thing was cool enough to install and use. <3
+  spiel: Thisway was developed from 2020-12-26 until 2025-07-xx by toydotgame. It has been used on over 400 servers over its 4-year development lifecycle. Thank you to all of you who thought this little thing was cool enough to install and use. <3
   # Sections
   section:
     # Attributions
@@ -98,9 +98,6 @@ about:
       # SpigotMC version
       # %s - Version number
       spigotmc: "Latest: v%s"
-      # Return value from the update checker if we're up to date or not
-      # %s - boolean.true|false's value
-      up-to-date: "Up to date?: %s"
     # Minecraft server version items
     minecraft:
       # Heading text
@@ -132,3 +129,90 @@ about:
       # 2$ - Option value (may be boolean.true|false's value or a string)
       # 3$ - Option's default value (again may be boolean or string)
       option: "%1$s: %2$s (defaults to %3$s)"
+
+#
+# TELEPORTATION
+#
+
+# /thisway <distance> commands
+tp:
+  # Syntax checking and resulting errors
+  syntax:
+    # If the provided <distance> value is not a number or is not positive
+    distance: Invalid distance value! Must be at least 1
+    # If the command executor used "true" or "false" to work with debug mode (this won't work, but used to be syntax before v1.4)
+    legacy-debug: 'Using "true" or "false" to specify debug mode was removed in v1.4. Please use the argument "debug" to turn on debug mode, or omit it to disable'
+    # If the debug mode toggle was invalid. This is also printed for the `legacy-debug` cases too
+    invalid-debug: Invalid debug mode toggle value!
+  # Console log when a player teleports, provided the config.yml option for it is enabled. Generally, debug.distance.singular|plural is appended to this message
+  # 1$ - Player IGN
+  # 2%, 3$, 4$ correspond to the start X, Y, Z
+  # 5$, 6$, 7$ correspond to the destination X, Y, Z
+  log: "%1$s teleported from (%2$s, %3$s, %4$s) to (%5$s, %6$s, %7$s)"
+  # Errors in the safety checks that show regardless of debug mode
+  error:
+    # Player foot destination must be non-solid and dry
+    foot: The destination is unsafe! (Probably a solid block or liquid in the way)
+    # Player eye destination must be non-solid
+    eye: The destination is unsafe! (Probably a solid block)
+    # Either the support block failed to place for some reason, or the user has configured Thisway not to
+    support-failed: The destination has no support blocks! If you have place-support-blocks enabled, a support block probably failed to place
+
+# Debug mode messages
+debug:
+  # New teleportation begins and debug mode is toggled on
+  enabled: Debug mode enabled for this teleport
+  # Beginning teleport
+  # %,d - Distance (locale magnitude-delimited number, use %s if you want plain int)
+  begin:
+    # For a distance of 1
+    singular: Teleporting %,d block...
+    # For all others
+    plural: Teleporting %,d blocks...
+  # Direction vector setup logging
+  direction-vector:
+    # Heading text
+    heading: "Facing vector: Server-side values"
+    # Values on initalisation of a teleport
+    # 1$ - Cardinal direction
+    # 2$ - Yaw (server-side, won't match client)
+    # 3$ - Pitch (server-side, won't match client)
+    values: "    f=%1$s, yaw=%2$s, pitch=%3$s"
+  # This string is appended to logs of the distance travelled
+  # %,d - Distance (as above, use %s for int)
+  distance:
+    # For a distance of 1
+    singular: " (%,d block)"
+    # For all others
+    plural: " (%,d blocks)"
+  # Teleporting from
+  # 1$, 2$, 3$ correspond to block X, Y, Z
+  from: "Teleporting from: %1$s, %2$s, %3$s"
+  # Teleporting to. This debug line usually has the debug.distance string appended onto it
+  # 1$, 2$, 3$ correspond to block X, Y, Z
+  to: "Teleporting to: %1$s, %2$s, %3$s"
+  # The offset in metres from the player's foot to their eye position
+  # %s - Distance
+  eye-height: "    Eye height: %s"
+  # Destination safety/suitability tests
+  checks:
+    # Heading text
+    heading: "Safety tests:"
+    # Individual check log entry, excluding the bullet
+    # 1$ - Check name
+    # 2$ - boolean.true|false's value for this check
+    check: "%1$s: %2$s"
+    # Destination is in terrain, so give a single attempt at trying a destination 1 block higher
+    destination-moved: "    Destination is solid, attempting to move 1 block up"
+    # Notification that support block checks are disabled for this flying player
+    is-flying: Player is flying, ignoring support checks
+    # Destination ground isn't stable so we place glass
+    support-placed: "    Destination isn't solid. Placing a support block"
+  # Player name log
+  # %s - Player IGN
+  player: "Player: %s"
+  # World name log
+  # %s - World file name
+  world: "World: %s"
+  # Once the entire logic of the teleport command has completed
+  complete: Teleport complete

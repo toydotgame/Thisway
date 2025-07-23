@@ -4,16 +4,30 @@ import java.io.File;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Lang {
 	private Lang() {} // Static class
 	
 	static final String[] languages = {"en-US"};
-	private static YamlConfiguration defaults;
-	private static YamlConfiguration messages;
+	private static YamlConfiguration defaults, messages;
 	private static String preferredLanguage;
 	private static Thisway plugin;
+	
+	private static String translationFailure(String key) {
+		return "Couldn't find "+preferredLanguage+" translation for "+key+"! "
+			+"Falling back to en-US translation";
+	}
+	private static String fallbackFailure(String key) {
+		return "Couldn't find fallback "
+			+"message for \""+key+"\"! If you are getting this error on a "
+			+"non-debugging build of Thisway: 1. Check you are up to date, and 2. "
+			+"Check that your en-US fallback or desired language file's version "
+			+"matches the installed Thisway version. The easiest way to fix this "
+			+"is to delete your plugins"+File.separator+"Thisway"+File.separator
+			+"lang"+File.separator+" folder and try again";
+	}
 	
 	static void loadMessages(Thisway plugin) {
 		Lang.plugin = plugin;
@@ -41,50 +55,60 @@ public class Lang {
 	
 	public static String create(String key, Object... args) {
 		String fetchedMessage = messages.getString(key);
-		if(fetchedMessage == null) {
-			Bukkit.getLogger().warning("Couldn't find "+preferredLanguage+" translation for "+key+"! Falling back to en-US translation");
+		if(fetchedMessage == null && !preferredLanguage.equals("en-US")) { // Don't log this error for en-US because it's fallback and will fail again
+			Thisway.logger.warning(translationFailure(key));
 			fetchedMessage = defaults.getString(key);
 		}
 		// If we check the fallback and it's not there, then it needs to be implemented internally:
 		if(fetchedMessage == null) {
-			throw new NullPointerException("Couldn't find fallback message for \""
-				+key+"\"! If you are getting this error on a non-debugging build "
-				+"of Thisway: 1. Check you are up to date, and 2. Check that your "
-				+"en-US fallback or desired language file's version matches your "
-				+"installed Thisway version—the easiest way to fix this is to "
-				+"delete your plugins"+File.separator+"Thisway"+File.separator
-				+"lang"+File.separator+" folder and try again");
+			Thisway.logger.severe(fallbackFailure(key));
+			return syntaxError(key);
 		}
 		
 		try {
 			return String.format(fetchedMessage, args);
 		} catch(MissingFormatArgumentException e) {
+			Bukkit.getLogger().severe("For key \""+key+"\":"); // Use universal logger because printStackTrace() does too
 			e.printStackTrace(); // Ends up in log
-			return "<ARGUMENT MISMATCH FOR LANGUAGE STRING "+key+">";
+			return syntaxError(key, "ARGUMENT MISMATCH");
 		}
 	}
 	
 	public static List<String> fetchList(String key) {
 		List<String> fetchedList = messages.getStringList(key);
-		if(fetchedList.size() == 0) {
-			Bukkit.getLogger().warning("Couldn't find "+preferredLanguage+" translations for "+key+"! Falling back to en-US translations");
+		if(fetchedList.size() == 0 && !preferredLanguage.equals("en-US")) {
+			Thisway.logger.warning(translationFailure(key)
+				+"If you are writing your own translation, make sure that "
+				+key+" is a list rather than a mapping");
 			fetchedList = defaults.getStringList(key);
 		}
 		// Again, if it's still null, then it needs to be implemented:
-		if(fetchedList.size() == 0) throw new NullPointerException("Couldn't find fallback messages for \""+key+"\"!");
+		if(fetchedList.size() == 0) {
+			Thisway.logger.severe(fallbackFailure(key));
+			fetchedList.add(syntaxError(key));
+			return fetchedList;
+		}
 		
 		return fetchedList;
 	}
 	
-	static void logFine(String key, Object... args) {
-		Bukkit.getLogger().fine(create(key, args));
+	private static String syntaxError(String key, String... errors) {
+		String errorString = (errors.length == 0 ? ""
+			:": "+String.join(" ", errors));
+		return ""+ChatColor.RESET+ChatColor.RED
+			+"<"+key+errorString+ChatColor.RESET+ChatColor.RED+">"
+			+ChatColor.RESET;
+	}
+	
+	public static boolean isList(String key) {
+		return messages.isList(key) || defaults.isList(key);
 	}
 	
 	static void log(String key, Object... args) {
-		Bukkit.getLogger().info(create(key, args));
+		Thisway.logger.info(create(key, args));
 	}
 	
 	static void logWarning(String key, Object... args) {
-		Bukkit.getLogger().warning(create(key, args));
+		Thisway.logger.warning(create(key, args));
 	}
 }

@@ -85,13 +85,13 @@ public final class UpdateChecker {
 			// If not up-to-date, are we ahead or behind?:
 			String greaterVersion = getGreaterVersion(INSTALLED_VERSION, SPIGOTMC_VERSION);
 			if(greaterVersion == INSTALLED_VERSION) {
-				Lang.logFine("updates.version-ahead");
+				Thisway.logger.fine(Lang.create("updates.version-ahead"));
 			} else if(greaterVersion == SPIGOTMC_VERSION) {
 				String message = Lang.create("updates.version-behind", SPIGOTMC_VERSION, INSTALLED_VERSION);					
 				// Broadcast to console and ops:
 				if(Configurator.fetchToggle(Option.BROADCAST_VERSION_ALERTS))
 					Bukkit.getServer().broadcast("[Thisway] "+ChatColor.YELLOW+message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
-				else Bukkit.getLogger().warning(message);
+				else Thisway.logger.warning(message);
 			} else {
 				Lang.logWarning("updates.version-unknown", INSTALLED_VERSION, SPIGOTMC_VERSION);
 			}

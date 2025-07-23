@@ -1,11 +1,11 @@
 package net.toydotgame.Thisway.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.toydotgame.Thisway.Configurator;
+import net.toydotgame.Thisway.Lang;
 import net.toydotgame.Thisway.Option;
 import net.toydotgame.Thisway.Thisway;
 
@@ -59,7 +59,7 @@ public final class TeleportCommand {
 			distance = Integer.parseInt(args[0]);
 			if(distance < 1) throw new NumberFormatException();
 		} catch(NumberFormatException e) {
-			return Thisway.syntaxError(player, "Invalid distance value! Must be at least 1");
+			return Thisway.syntaxError(player, "tp.syntax.distance");
 		}
 		
 		// CHECK: Second argument is "debug" and not a legacy or invalid value
@@ -72,14 +72,13 @@ public final class TeleportCommand {
 					if(!Thisway.testForPermission(player, "debug")) return true;
 					
 					debugMode = true;
-					player.sendMessage("Debug mode enabled for this teleport");
+					player.sendMessage(Lang.create("debug.enabled"));
 					break;
 				case "true":
 				case "false":
-					player.sendMessage(ChatColor.YELLOW+"Using \"true\" or \"false\" to specify debug mode was removed "
-						+"in v1.4. Please use the argument \"debug\" to turn on debug mode, or omit it to disable");
+					player.sendMessage(ChatColor.YELLOW+Lang.create("tp.syntax.legacy-debug"));
 				default:
-					return Thisway.syntaxError(player, "Invalid debug mode toggle value!");
+					return Thisway.syntaxError(player, "tp.syntax.invalid-debug");
 			}
 		}
 		
@@ -94,7 +93,8 @@ public final class TeleportCommand {
 	 * @param teleportDistance Distance to teleport
 	 */
 	private static void main(int teleportDistance) {
-		debug("Teleporting "+teleportDistance+" blocks...");
+		if(teleportDistance == 1) debug("begin.singular", teleportDistance);
+		else debug("begin.plural", teleportDistance);
 		
 		DirectionVector facing = new DirectionVector(player.getEyeLocation());
 		
@@ -102,69 +102,83 @@ public final class TeleportCommand {
 		Location start = player.getLocation(); // Player location
 		defineDestination(facing, start, teleportDistance);
 		
-		String teleportDistanceString = " ("+teleportDistance+" block"+(teleportDistance==1 ? "" : "s")+")"; // Used later
-		debug("Teleporting from: "+toBlockString(start));
-		debug("Teleporting to: "+toBlockString(destination)+teleportDistanceString);
-		debug("    Eye height: "+player.getEyeHeight());
+		String teleportDistanceString = (teleportDistance == 1
+			?Lang.create("debug.distance.singular", teleportDistance)
+			:Lang.create("debug.distance.plural", teleportDistance));
+		debug("from", locationToArray(start));
+		debugLiteral(Lang.create("debug.to", locationToArray(destination))
+			+teleportDistanceString);
 		
-		debug("");
-		debug(ChatColor.BOLD+"Safety tests:");
+		debugHeading("checks.heading");
 		
 		// CHECK: If the destination is half in the ground, redefine everything
 		// to be 1 block up. If this breaks things further down, oh well, we tried.
-		boolean feetInNonSolid = TeleportTests.testAndLogBoolean("feetInNonSolid",
+		boolean feetInNonSolid = TeleportTests.testAndLogBoolean(player, "feetInNonSolid",
 			!destination.getBlock().getType().isSolid());
 		if(!feetInNonSolid) {
-			debug("    Destination is solid, attempting to move 1 block up");
+			debug("checks.destination-moved");
 			start = start.add(0, 1, 0);
 			defineDestination(facing, start, teleportDistance); // Redefine destination
 		}
 		
 		TeleportTests tests = new TeleportTests(player, destination, destinationEye, destinationGround);
 		if(!tests.testAll()) return;
-		debug("");
+		debugLiteral((String)null);
 		
 		String playerName = player.getName();
 		String world = player.getWorld().getName();
-		debug("Player: "+playerName);
-		debug("World: "+world);
+		debug("player", playerName);
+		debug("world", world);
 		
 		player.teleport(destination);
 		
 		if(Configurator.fetchToggle(Option.LOG_TELEPORTS))
-			/*Bukkit.getServer().broadcast(""+ChatColor.GRAY+ChatColor.ITALIC+"[Thisway: " // Concat empty string otherwise the `ChatColor`s clash
-				+playerName+" teleported from ("
-				+toBlockString(start.subtract(0, (feetInNonSolid ? 0 : 1), 0))+") to ("
-				+toBlockString(destination)+")"+teleportDistanceString+"]",
-				Server.BROADCAST_CHANNEL_ADMINISTRATIVE);*/
-			Bukkit.getLogger().info(playerName+" teleported from ("
-				+toBlockString(start.subtract(0, (feetInNonSolid ? 0 : 1), 0))+") to ("
-				+toBlockString(destination)+")"+teleportDistanceString);
+			Thisway.logger.info(Lang.create("tp.log", playerName,
+				locationToArray(start.subtract(0, (feetInNonSolid ? 0:1), 0)),
+				locationToArray(destination))+teleportDistanceString);
 		
-		if(debugMode) player.sendMessage("Teleport complete");
+		debugLiteral((String)null);
+		debug("complete");
+	}
+	
+	static void debugLiteral(String s) {
+		if(!debugMode) return;
+		
+		if(s == null || s.equals("")) player.sendMessage((String)null);
+		else player.sendMessage(""+ChatColor.GRAY+s);
 	}
 	
 	/**
 	 * Prints a debug message if debug mode is enabled.
 	 * @param message Message to print
 	 */
-	static void debug(String message) {
+	static void debug(String translationKey, Object... args) {
 		if(!debugMode) return;
 		
-		player.sendMessage(""+ChatColor.GRAY+ChatColor.ITALIC+message);
+		if(translationKey == null || translationKey == "")
+			debugLiteral(translationKey);
+		else debugLiteral(Lang.create("debug."+translationKey, args));
 	}
 	
-	/**
-	 * Acts as an alternative of {@link Location#toString()}. World and rotation
-	 * information, as well as the double precision decimals, and the formatting
-	 * of the regular Location String is cluttered and irrelevant when we just
-	 * want to print out a location as a coordinate in the current world.
-	 * @param l {@link Location} to use
-	 * @return String of X, Y, and Z coordinates of this Location, delimited by
-	 * "{@code , }"
-	 */
-	private static String toBlockString(Location l) {
-		return l.getBlockX()+", "+l.getBlockY()+", "+l.getBlockZ();
+	static void debugHeading(String translationKey, Object... args) {
+		if(!debugMode) return;
+		
+		debugLiteral((String)null);
+		String heading = ChatColor.BOLD+Lang.create("debug."+translationKey, args);
+		
+		// Mimic of AboutCommand#printHeading(String, Object...):
+		// TODO: Move this code to AboutCommand because its redundantly specified twice now
+		int i = heading.indexOf(':');
+		if(i >= 0) { // If the heading contains a key-value pair, format it as such:
+			heading = heading.substring(0, ++i)+ChatColor.RESET+ChatColor.GRAY
+				+heading.substring(i);
+		}
+		
+		debugLiteral(heading);
+	}
+	
+	private static Object[] locationToArray(Location l) {
+		return new Integer[] {l.getBlockX(), l.getBlockY(), l.getBlockZ()};
 	}
 	
 	/**

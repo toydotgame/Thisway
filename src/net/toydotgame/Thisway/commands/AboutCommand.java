@@ -56,48 +56,81 @@ public final class AboutCommand {
 	private static void main() {
 		printRule("Thisway");
 		
+		// Copyright and history
 		sender.sendMessage("(c) 2020, 2025 toydotgame");
-		sender.sendMessage(ChatColor.GRAY+String.join("\n"+ChatColor.RESET+ChatColor.GRAY,
-			ChatColor.ITALIC+Lang.create("about.spiel"),
-			ChatColor.BOLD+Lang.create("about.section.attributions.heading"),
-			"- "+String.join("\n- ", Lang.fetchList("about.section.attributions.list"))));
-		sender.sendMessage((String) null); // Print an empty line because printing whitespace only causes weird display
+		sender.sendMessage(""+ChatColor.GRAY+ChatColor.ITALIC+Lang.create("about.spiel"));
 		
-		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.thisway.heading"));
-		sender.sendMessage("- "+Lang.create("about.section.thisway.installed", Thisway.updates.INSTALLED_VERSION));
-		sender.sendMessage("- "+Lang.create("about.section.thisway.spigotmc", Thisway.updates.SPIGOTMC_VERSION));
-		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.thisway.up-to-date", boolToWord(Thisway.updates.IS_UP_TO_DATE)));
-		sender.sendMessage((String)null);
+		// Attributions
+		printHeading("about.section.attributions.heading");
+		printValue("about.section.attributions.list");
 		
-		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.minecraft.heading", Bukkit.getBukkitVersion().split("-")[0]));
-		sender.sendMessage("- "+Lang.create("about.section.minecraft.vendor", Bukkit.getBukkitVersion()));
-		sender.sendMessage("- "+Lang.create("about.section.minecraft.source", Bukkit.getVersion().split(" ")[0]));
-		sender.sendMessage((String)null);
+		// Thisway version info
+		printHeading("about.section.thisway.heading");
+		printValue("about.section.thisway.installed",
+			(Thisway.updates.SPIGOTMC_VERSION != null                            // Colour for local version
+				?(Thisway.updates.IS_UP_TO_DATE ? ChatColor.GREEN:ChatColor.RED) // If SpigotMC version is valid, we can use IS_UP_TO_DATE to format our local version as good or not
+				:ChatColor.YELLOW)                                               // If SpigotMC version is _invalid_, then go yellow instead
+			+Thisway.updates.INSTALLED_VERSION);
+		printValue("about.section.thisway.spigotmc",
+			(Thisway.updates.SPIGOTMC_VERSION != null
+			?ChatColor.GREEN+Thisway.updates.SPIGOTMC_VERSION // If SpigotMC version is valid, make it green always
+			:ChatColor.YELLOW+"<unknown>"));                  // If not, say "<unknown>" in yellow
 		
-		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.permissions.heading"));
+		// Minecraft/server version info
+		printHeading("about.section.minecraft.heading", Bukkit.getBukkitVersion().split("-")[0]);
+		printValue("about.section.minecraft.vendor", Bukkit.getBukkitVersion());
+		printValue("about.section.minecraft.source", Bukkit.getVersion().split(" ")[0]);
+		
+		// Permissions
+		printHeading("about.section.permissions.heading");
 		for(Permission p : getPluginPermissions())
-			sender.sendMessage("- "+Lang.create("about.section.permissions.permission",
-				p.getName().replaceFirst("^thisway\\.", ""), boolToWord(sender.hasPermission(p))));
-		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.permissions.is-op", boolToWord(sender.isOp())));
-		sender.sendMessage((String)null);
+			printValue("about.section.permissions.permission",
+				p.getName().replaceFirst("^thisway\\.", ""),
+				boolToWord(sender.hasPermission(p)));
+		printValue("about.section.permissions.is-op", boolToWord(sender.isOp()));
 		
-		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.config.heading"));
+		// Config
+		printHeading("about.section.config.heading");
 		Configurator.fetchAll().forEach((k, v) -> {
 			v = convertPossibleBooleanToPrettyPrint(v);
 			String d = convertPossibleBooleanToPrettyPrint(
 				Option.get(k).defaultValue.toString());
 			
-			sender.sendMessage("- "+Lang.create("about.section.config.option", k, v, d));
-				
-			/*printNamedValue(ChatColor.GRAY+"- "+ChatColor.ITALIC+k,
-				boolToWord(v)+ChatColor.RESET+ChatColor.GRAY+ChatColor.ITALIC
-				+(Option.get(k)!=null // Catch NullPointerException
-					? " (defaults to "+boolToWord((Boolean)Option.get(k).defaultValue)
-						+ChatColor.RESET+ChatColor.GRAY+ChatColor.ITALIC+")"
-					:""));*/
+			printValue("about.section.config.option", k, v, d);
 		});
 		
-		printRule();
+		printRule((String)null);
+	}
+	
+	private static void printHeading(String translationKey, Object... args) {
+		// Print empty line before heading. Using a null string causes less
+		// visual issues than "\n" and uses less memory than ""
+		sender.sendMessage((String)null);
+		
+		String heading = ChatColor.BOLD+Lang.create(translationKey, args);
+		int i = heading.indexOf(':');
+		if(i >= 0) { // If the heading contains a key-value pair, format it as such:
+			heading = heading.substring(0, ++i)+ChatColor.RESET+ChatColor.GRAY
+				+heading.substring(i);
+		}
+		
+		sender.sendMessage(heading);
+	}
+	
+	static void printValue(CommandSender cs, String translationKey, Object... args) {
+		String line = "", linePrefix = ChatColor.GRAY+"- ";
+		if(Lang.isList(translationKey))
+			for(String s : Lang.fetchList(translationKey))
+				cs.sendMessage(linePrefix+s);
+		else {
+			for(int i = 0; i < args.length; i++) // Fix formatting resets:
+				args[i] += ChatColor.GRAY.toString();
+			line = linePrefix+Lang.create(translationKey, args);
+			cs.sendMessage(line);
+		}
+	}
+	private static void printValue(String translationKey, Object... args) {
+		printValue(sender, translationKey, args);
 	}
 	
 	private static String convertPossibleBooleanToPrettyPrint(String s) {
@@ -105,15 +138,6 @@ public final class AboutCommand {
 			return boolToWord(Boolean.parseBoolean(s));
 		// Else, not a boolean
 		return s;
-	}
-	
-	/**
-	 * Prints a key-value pair to chat as a bold key with a dimmed value.
-	 * @param key Name of the thing
-	 * @param value Value of the thing
-	 */
-	private static void printNamedValue(String key, String value) {
-		sender.sendMessage(ChatColor.BOLD+key+":"+ChatColor.RESET+" "+ChatColor.GRAY+value);
 	}
 	
 	/**
@@ -125,7 +149,7 @@ public final class AboutCommand {
 	 */
 	private static void printRule(String optionalText) {
 		String hr = "-----------------------------------------------------"; // Assumes default chat width
-		if(optionalText.length() > 0) {
+		if(optionalText != null && optionalText.length() > 0) {
 			final int textLength = Math.min(optionalText.length()+4, hr.length()); // Pick smallest one to avoid StringIndexOutOfBounds
 			optionalText = "[ "+ChatColor.RESET+ChatColor.DARK_GREEN+ChatColor.BOLD+optionalText+ChatColor.YELLOW+" ]";
 			final int startingIndex = (hr.length()-textLength)/2;
@@ -135,14 +159,6 @@ public final class AboutCommand {
 		}
 		sender.sendMessage(ChatColor.YELLOW+hr);
 	}
-	/**
-	 * Overload for {@link #printRule(String)} that passes an empty string to
-	 * {@code printRule(...)} to accomplish drawing a plain ol' rule with no
-	 * text.
-	 */
-	private static void printRule() {
-		printRule("");
-	}
 	
 	/**
 	 * Converts an input boolean value to a coloured text string "Yes" or "No".
@@ -151,10 +167,8 @@ public final class AboutCommand {
 	 * "No" if {@code b == false}
 	 */
 	static String boolToWord(boolean b) {
-		return
-			(b ? ChatColor.GREEN+Lang.create("boolean.true")
-				:ChatColor.RED+Lang.create("boolean.false"))
-			+ChatColor.RESET;
+		return (b ? ChatColor.GREEN+Lang.create("boolean.true")
+			:ChatColor.RED+Lang.create("boolean.false"))+ChatColor.RESET;
 	}
 	
 	/**

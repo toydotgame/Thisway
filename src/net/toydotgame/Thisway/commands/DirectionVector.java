@@ -1,6 +1,5 @@
 package net.toydotgame.Thisway.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
@@ -57,8 +56,8 @@ class DirectionVector {
 		 */
 		else direction = directions[Math.round(yaw/45)&0x7];
 		
-		TeleportCommand.debug(ChatColor.BOLD+"Facing vector: Server-side values");
-		TeleportCommand.debug("    f="+direction+", yaw="+yaw+", pitch="+pitch);
+		TeleportCommand.debugHeading("direction-vector.heading");
+		TeleportCommand.debug("direction-vector.values", direction, yaw, pitch);
 	}
 	
 	/**

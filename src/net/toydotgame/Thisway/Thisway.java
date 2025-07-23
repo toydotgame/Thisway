@@ -1,6 +1,7 @@
 package net.toydotgame.Thisway;
 
 import java.util.List;
+import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,8 @@ public final class Thisway extends JavaPlugin {
 	// it when needed:
 	public static List<Permission> permissionsReference;
 	
+	public static Logger logger;
+	
 	/**
 	 * Check for updates, then load config, messages, and permissions. Log a
 	 * simple message to follow the Spigot logs (that only say that they've
@@ -37,6 +40,8 @@ public final class Thisway extends JavaPlugin {
 	 */
 	@Override
 	public void onEnable() {
+		logger = getLogger(); // Cheap and nasty way to make this instance's logger static
+		
 		updates = new UpdateChecker(this);
 		updates.logUpdates();
 		
