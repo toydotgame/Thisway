@@ -131,7 +131,7 @@ public final class TeleportCommand {
 		
 		player.teleport(destination);
 		
-		if(Configurator.fetch(Option.LOG_TELEPORTS))
+		if(Configurator.fetchToggle(Option.LOG_TELEPORTS))
 			/*Bukkit.getServer().broadcast(""+ChatColor.GRAY+ChatColor.ITALIC+"[Thisway: " // Concat empty string otherwise the `ChatColor`s clash
 				+playerName+" teleported from ("
 				+toBlockString(start.subtract(0, (feetInNonSolid ? 0 : 1), 0))+") to ("

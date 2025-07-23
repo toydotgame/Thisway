@@ -10,7 +10,8 @@ public enum Option {
 	VERSION_ALERTS("version-alerts", true),
 	BROADCAST_VERSION_ALERTS("in-game-version-alerts-to-ops", true),
 	LOG_TELEPORTS("log-teleports-in-console", false),
-	SUPPORT_BLOCKS("place-support-blocks", true);
+	SUPPORT_BLOCKS("place-support-blocks", true),
+	LANGUAGE("language", "en-US");
 	
 	/**
 	 * The name of this option in YAML.
@@ -19,10 +20,10 @@ public enum Option {
 	/**
 	 * The default value of this option if not set by the user.
 	 */
-	public final boolean defaultValue;
+	public final Object defaultValue;
 	
-	Option(String string, boolean defaultValue) { // Private
-		yamlName = string;
+	Option(String name, Object defaultValue) { // Private
+		yamlName = name;
 		this.defaultValue = defaultValue;
 	}
 	
@@ -33,7 +34,8 @@ public enum Option {
 	 */
 	public static Option get(String name) {
 		for(Option o : Option.values())
-			if(o.yamlName.equals(name)) return o;
+			if(o.yamlName.equals(name))
+				return o;
 		return null;
 	}
 }

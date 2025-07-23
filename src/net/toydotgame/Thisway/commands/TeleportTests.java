@@ -74,7 +74,7 @@ class TeleportTests {
 		}
 		
 		// Set glass support block if desired:
-		if(Configurator.fetch(Option.SUPPORT_BLOCKS)
+		if(Configurator.fetchToggle(Option.SUPPORT_BLOCKS)
 			&& !testAndLogBoolean("destGroundIsSolid", !ground.getBlock().isEmpty())) {
 			TeleportCommand.debug("    Destination isn't solid. Placing a support block");
 			ground.getBlock().setType(Material.GLASS);

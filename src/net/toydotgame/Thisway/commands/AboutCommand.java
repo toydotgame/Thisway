@@ -1,10 +1,13 @@
 package net.toydotgame.Thisway.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import net.toydotgame.Thisway.Configurator;
+import net.toydotgame.Thisway.Lang;
 import net.toydotgame.Thisway.Option;
 import net.toydotgame.Thisway.Thisway;
 
@@ -39,7 +42,7 @@ public final class AboutCommand {
 		
 		// CHECK: Only 1 argument (not 2) for about
 		if(args.length != 1)
-			return Thisway.syntaxError(sender, "Too many arguments!");
+			return Thisway.syntaxError(sender, "syntax.args-length");
 		
 		// Syntax good, run main:
 		main();		
@@ -55,42 +58,53 @@ public final class AboutCommand {
 		
 		sender.sendMessage("(c) 2020, 2025 toydotgame");
 		sender.sendMessage(ChatColor.GRAY+String.join("\n"+ChatColor.RESET+ChatColor.GRAY,
-			ChatColor.ITALIC+"Thisway was developed from 2020-12-26 until 2025-07-xx by toydotgame. It has been used on at least 400 servers over its 4-year development lifecycle. Thank you to all of you who thought this little thing was cool enough to install and use. <3",
-			ChatColor.BOLD+"Attributions:",
-			"- toydotgame: Developer and maintainer (2020–2025)",
-			"- MatDvlp: Feature suggestions (logging improvements and multi-language) (2022)"));
-		sender.sendMessage((String)null); // Print an empty line because prepending '\n' doesn't work prettily
+			ChatColor.ITALIC+Lang.create("about.spiel"),
+			ChatColor.BOLD+Lang.create("about.section.attributions.heading"),
+			"- "+String.join("\n- ", Lang.fetchList("about.section.attributions.list"))));
+		sender.sendMessage((String) null); // Print an empty line because printing whitespace only causes weird display
 		
-		sender.sendMessage(ChatColor.BOLD+"Thisway version");
-		printNamedValue(ChatColor.RESET+"- Local", "v"+Thisway.updates.INSTALLED_VERSION);
-		printNamedValue(ChatColor.RESET+"- Latest", "v"+Thisway.updates.SPIGOTMC_VERSION);
-		printNamedValue("Up to date?", boolToWord(Thisway.updates.IS_UP_TO_DATE));
+		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.thisway.heading"));
+		sender.sendMessage("- "+Lang.create("about.section.thisway.installed", Thisway.updates.INSTALLED_VERSION));
+		sender.sendMessage("- "+Lang.create("about.section.thisway.spigotmc", Thisway.updates.SPIGOTMC_VERSION));
+		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.thisway.up-to-date", boolToWord(Thisway.updates.IS_UP_TO_DATE)));
 		sender.sendMessage((String)null);
 		
-		printNamedValue("Minecraft version", "Release "+Bukkit.getBukkitVersion().split("-")[0]);
-		printNamedValue(ChatColor.RESET+"- Vendor version", Bukkit.getBukkitVersion());
-		printNamedValue(ChatColor.RESET+"- Vendor source version", Bukkit.getVersion().split(" ")[0]);
-		
+		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.minecraft.heading", Bukkit.getBukkitVersion().split("-")[0]));
+		sender.sendMessage("- "+Lang.create("about.section.minecraft.vendor", Bukkit.getBukkitVersion()));
+		sender.sendMessage("- "+Lang.create("about.section.minecraft.source", Bukkit.getVersion().split(" ")[0]));
 		sender.sendMessage((String)null);
-		sender.sendMessage(ChatColor.BOLD+"Permissions");
-		for(Permission p : Thisway.getPluginPermissions())
-			printNamedValue(
-				ChatColor.GRAY+"- "+ChatColor.ITALIC+p.getName().replaceFirst("^thisway\\.", ""),
-				boolToWord(sender.hasPermission(p)));
-		printNamedValue("Operator?", boolToWord(sender.isOp()));
 		
+		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.permissions.heading"));
+		for(Permission p : getPluginPermissions())
+			sender.sendMessage("- "+Lang.create("about.section.permissions.permission",
+				p.getName().replaceFirst("^thisway\\.", ""), boolToWord(sender.hasPermission(p))));
+		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.permissions.is-op", boolToWord(sender.isOp())));
 		sender.sendMessage((String)null);
-		sender.sendMessage(ChatColor.BOLD+"Configuration");
+		
+		sender.sendMessage(ChatColor.BOLD+Lang.create("about.section.config.heading"));
 		Configurator.fetchAll().forEach((k, v) -> {
-			printNamedValue(ChatColor.GRAY+"- "+ChatColor.ITALIC+k,
+			v = convertPossibleBooleanToPrettyPrint(v);
+			String d = convertPossibleBooleanToPrettyPrint(
+				Option.get(k).defaultValue.toString());
+			
+			sender.sendMessage("- "+Lang.create("about.section.config.option", k, v, d));
+				
+			/*printNamedValue(ChatColor.GRAY+"- "+ChatColor.ITALIC+k,
 				boolToWord(v)+ChatColor.RESET+ChatColor.GRAY+ChatColor.ITALIC
 				+(Option.get(k)!=null // Catch NullPointerException
-					? " (defaults to "+boolToWord(Option.get(k).defaultValue)
+					? " (defaults to "+boolToWord((Boolean)Option.get(k).defaultValue)
 						+ChatColor.RESET+ChatColor.GRAY+ChatColor.ITALIC+")"
-					:""));
+					:""));*/
 		});
 		
 		printRule();
+	}
+	
+	private static String convertPossibleBooleanToPrettyPrint(String s) {
+		if(s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false"))
+			return boolToWord(Boolean.parseBoolean(s));
+		// Else, not a boolean
+		return s;
 	}
 	
 	/**
@@ -137,6 +151,31 @@ public final class AboutCommand {
 	 * "No" if {@code b == false}
 	 */
 	static String boolToWord(boolean b) {
-		return b ? ChatColor.GREEN+"Yes":ChatColor.RED+"No";
+		return
+			(b ? ChatColor.GREEN+Lang.create("boolean.true")
+				:ChatColor.RED+Lang.create("boolean.false"))
+			+ChatColor.RESET;
+	}
+	
+	/**
+	 * Returns a copy of {@link
+	 * org.bukkit.plugin.PluginDescriptionFile#getPermissions()
+	 * this.getDecription().getPermission()}, sorted alphabetically. The value
+	 * yield directly from {@code getPermissions()} isn't able to be sorted
+	 * because it is an object reference to the live server permissions in
+	 * memory. Therefore, when {@link #onEnable()} is reached for Thisway, we
+	 * store that reference statically, and then duplicate it as a new {@link
+	 * java.util.ArrayList} which we then sort and return.
+	 * @return Permissions from {@code plugin.yml}, sorted alphabetically
+	 */
+	private static List<Permission> getPluginPermissions() {
+		// Create a copy of the live permissions:
+		List<Permission> permissions = new ArrayList<Permission>(Thisway.permissionsReference);
+		// Returned list has a random order, so fix it:
+		permissions.sort((a, b) -> {
+			return a.getName().compareTo(b.getName());
+		});
+		
+		return permissions;
 	}
 }

@@ -3,13 +3,18 @@ package net.toydotgame.Thisway;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 
 /**
- * Simple update checkver for this plugin on the SpigotMC API.
+ * Simple update checkver for this plugin on the SpigotMC API.<br>
+ * <br>
+ * The primary reason that this class isn't static like the other init classes
+ * is that this class uses Bukkit Runnables that are ever-so-slightly kinder to
+ * deal with in an instantiated context. Also making this class static to save
+ * one line of code in {@link Thisway#onEnable() onEnable()} isn't worth the
+ * effort.
  * <dl><dt><b>Created on:</b></dt><dd>2025-07-15</dd></dl>
  * @author toydotgame
  */
@@ -57,15 +62,13 @@ public final class UpdateChecker {
 	 * @see #getLatestVersionFromAPI(Runnable)
 	 */
 	void logUpdates() {
-		Logger log = PLUGIN_INSTANCE.getLogger();
-		
 		// getLatestVersionFromAPI(Runnable r) fetches the latest version and
 		// sets this instance's SPIGOTMC_VERSION field accordingly (can be null
 		// if failed). It then runs the input lambda as a kind of callback:
 		getLatestVersionFromAPI(() -> {
 			// We get null if the fetch failed:
 			if(SPIGOTMC_VERSION == null) {
-				log.warning("Couldn't fetch the latest version!");
+				Lang.logWarning("updates.fetch-failure");
 				return;
 			}
 			
@@ -74,23 +77,23 @@ public final class UpdateChecker {
 				IS_UP_TO_DATE = true;
 				return;
 			}
+			// Else, inform the user
 			
 			// Die if we don't have version alerts enabled:
-			if(!Configurator.fetch(Option.VERSION_ALERTS)) return;
+			if(!Configurator.fetchToggle(Option.VERSION_ALERTS)) return;
 			
 			// If not up-to-date, are we ahead or behind?:
 			String greaterVersion = getGreaterVersion(INSTALLED_VERSION, SPIGOTMC_VERSION);
 			if(greaterVersion == INSTALLED_VERSION) {
-				log.fine("Local version is greater than the one found on SpigotMC");
+				Lang.logFine("updates.version-ahead");
 			} else if(greaterVersion == SPIGOTMC_VERSION) {
-				String message = "Newer version found on SpigotMC (v"+SPIGOTMC_VERSION+")! You are running v"+INSTALLED_VERSION;					
+				String message = Lang.create("updates.version-behind", SPIGOTMC_VERSION, INSTALLED_VERSION);					
 				// Broadcast to console and ops:
-				if(Configurator.fetch(Option.BROADCAST_VERSION_ALERTS))
+				if(Configurator.fetchToggle(Option.BROADCAST_VERSION_ALERTS))
 					Bukkit.getServer().broadcast("[Thisway] "+ChatColor.YELLOW+message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
-				else log.warning(message);
+				else Bukkit.getLogger().warning(message);
 			} else {
-				log.warning("Couldn't determine the latest version out of these two: "
-					+"v"+INSTALLED_VERSION+" (local), v"+SPIGOTMC_VERSION+" (SpigotMC)");
+				Lang.logWarning("updates.version-unknown", INSTALLED_VERSION, SPIGOTMC_VERSION);
 			}
 		});
 	}

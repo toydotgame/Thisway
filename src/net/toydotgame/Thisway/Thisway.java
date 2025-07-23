@@ -1,6 +1,5 @@
 package net.toydotgame.Thisway;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,11 +27,12 @@ public final class Thisway extends JavaPlugin {
 	public static UpdateChecker updates;
 	// Permissions can change after enable time, so store a pointer here and get
 	// it when needed:
-	private static List<Permission> permissionsReference;
+	public static List<Permission> permissionsReference;
 	
 	/**
-	 * Check for updates and load our config. Log a simple message to follow the
-	 * Spigot logs that only say that they've <i>begun</i> enabling Thisway.
+	 * Check for updates, then load config, messages, and permissions. Log a
+	 * simple message to follow the Spigot logs (that only say that they've
+	 * <i>begun</i> enabling Thisway).
 	 * {@inheritDoc}, and after the constructor for this class.
 	 */
 	@Override
@@ -42,9 +42,11 @@ public final class Thisway extends JavaPlugin {
 		
 		Configurator.loadConfig(this);
 		
+		Lang.loadMessages(this); // loadMessages() depends on having a loaded config
+		
 		permissionsReference = getDescription().getPermissions();
 		
-		getLogger().info("Enabled!");
+		Lang.log("on-enable");
 	}
 	
 	/**
@@ -56,13 +58,13 @@ public final class Thisway extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		// CHECK: Sender must be a player
 		if(!(sender instanceof Player)) {
-			sender.sendMessage("[Thisway] "+ChatColor.RED+"Thisway can only be run in-game!");
+			sender.sendMessage("[Thisway] "+ChatColor.RED+Lang.create("syntax.console-sender"));
 			return true; // Not a syntax error
 		}
 		
 		// CHECK: Must have 1 or 2 args
 		if(args.length < 1 || args.length > 2)
-			return syntaxError(sender, "Wrong number of arguments!");
+			return syntaxError(sender, "syntax.args-length");
 		
 		// BRANCH: If we're running `about`, run and end here
 		if(args[0].equalsIgnoreCase("about"))
@@ -82,8 +84,8 @@ public final class Thisway extends JavaPlugin {
 	 * @param message Error message
 	 * @return {@code false}
 	 */
-	public static boolean syntaxError(CommandSender sender, String message) {
-		sender.sendMessage(ChatColor.RED+message);
+	public static boolean syntaxError(CommandSender sender, String key, Object... args) {
+		sender.sendMessage(ChatColor.RED+Lang.create(key, args));
 		return false;
 	}
 	
@@ -99,29 +101,7 @@ public final class Thisway extends JavaPlugin {
 	public static boolean testForPermission(CommandSender player, String permission) {
 		if(player.hasPermission("thisway."+permission)) return true;
 		
-		player.sendMessage(ChatColor.RED+"You do not have the thisway."+permission+" permission!");
+		player.sendMessage(ChatColor.RED+Lang.create("no-permission", permission));
 		return false;
-	}
-	
-	/**
-	 * Returns a copy of {@link
-	 * org.bukkit.plugin.PluginDescriptionFile#getPermissions()
-	 * this.getDecription().getPermission()}, sorted alphabetically. The value
-	 * yield directly from {@code getPermissions()} isn't able to be sorted
-	 * because it is an object reference to the live server permissions in
-	 * memory. Therefore, when {@link #onEnable()} is reached for Thisway, we
-	 * store that reference statically, and then duplicate it as a new {@link
-	 * java.util.ArrayList} which we then sort and return.
-	 * @return Permissions from {@code plugin.yml}, sorted alphabetically
-	 */
-	public static List<Permission> getPluginPermissions() {
-		// Create a copy of the live permissions:
-		List<Permission> permissions = new ArrayList<Permission>(permissionsReference);
-		// Returned list has a random order, so fix it:
-		permissions.sort((a, b) -> {
-			return a.getName().compareTo(b.getName());
-		});
-		
-		return permissions;
 	}
 }
