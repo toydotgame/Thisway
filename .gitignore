@@ -5,6 +5,7 @@
 /bin
 *.ant
 /.externalToolBuilders
+/doc
 
 # Eclipse project files
 .project
