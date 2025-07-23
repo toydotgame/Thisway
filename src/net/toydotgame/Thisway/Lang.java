@@ -15,6 +15,11 @@ public class Lang {
 	private static String preferredLanguage;
 	private static Thisway plugin;
 	
+	// Few language provisions are made in this class, so most language-fetching
+	// -related errors will be in English. This is to avoid catastrophic looping
+	// type errors when a hypothetical language error file cannot be found
+	// TODO: The above in the Javadoc class comment
+	
 	private static String translationFailure(String key) {
 		return "Couldn't find "+preferredLanguage+" translation for "+key+"! "
 			+"Falling back to en-US translation";
