@@ -60,7 +60,7 @@ public final class Thisway extends JavaPlugin {
 	 * incorrect inputs (thus prints usage)
 	 */
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
 		// CHECK: Sender must be a player
 		if(!(sender instanceof Player)) {
 			sender.sendMessage("[Thisway] "+ChatColor.RED+Lang.create("syntax.console-sender"));

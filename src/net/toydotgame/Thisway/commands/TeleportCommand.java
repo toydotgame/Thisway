@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import dev.linfoot.bukkit.utils.MessageUtils;
 import net.toydotgame.Thisway.Configurator;
 import net.toydotgame.Thisway.Lang;
 import net.toydotgame.Thisway.Option;
@@ -83,7 +84,7 @@ public final class TeleportCommand {
 		}
 		
 		// Syntax good, teleport:
-		main(distance);
+		teleport(distance);
 		return true;
 	}
 	
@@ -92,9 +93,10 @@ public final class TeleportCommand {
 	 * they're facing
 	 * @param teleportDistance Distance to teleport
 	 */
-	private static void main(int teleportDistance) {
-		if(teleportDistance == 1) debug("begin.singular", teleportDistance);
-		else debug("begin.plural", teleportDistance);
+	private static void teleport(int teleportDistance) {
+		debugRule("rule.begin");
+		if(teleportDistance == 1) debugLine("begin.singular", teleportDistance);
+		else debugLine("begin.plural", teleportDistance);
 		
 		DirectionVector facing = new DirectionVector(player.getEyeLocation());
 		
@@ -105,9 +107,10 @@ public final class TeleportCommand {
 		String teleportDistanceString = (teleportDistance == 1
 			?Lang.create("debug.distance.singular", teleportDistance)
 			:Lang.create("debug.distance.plural", teleportDistance));
-		debug("from", locationToArray(start));
-		debugLiteral(Lang.create("debug.to", locationToArray(destination))
+		debugLine("from", locationToArray(start));
+		debug(Lang.create("debug.to", locationToArray(destination))
 			+teleportDistanceString);
+		debugLine("eye-height", player.getEyeHeight());
 		
 		debugHeading("checks.heading");
 		
@@ -116,19 +119,19 @@ public final class TeleportCommand {
 		boolean feetInNonSolid = TeleportTests.testAndLogBoolean(player, "feetInNonSolid",
 			!destination.getBlock().getType().isSolid());
 		if(!feetInNonSolid) {
-			debug("checks.destination-moved");
+			debugLine("checks.destination-moved");
 			start = start.add(0, 1, 0);
 			defineDestination(facing, start, teleportDistance); // Redefine destination
 		}
 		
 		TeleportTests tests = new TeleportTests(player, destination, destinationEye, destinationGround);
 		if(!tests.testAll()) return;
-		debugLiteral((String)null);
+		debug((String)null);
 		
 		String playerName = player.getName();
 		String world = player.getWorld().getName();
-		debug("player", playerName);
-		debug("world", world);
+		debugLine("player", playerName);
+		debugLine("world", world);
 		
 		player.teleport(destination);
 		
@@ -137,11 +140,12 @@ public final class TeleportCommand {
 				locationToArray(start.subtract(0, (feetInNonSolid ? 0:1), 0)),
 				locationToArray(destination))+teleportDistanceString);
 		
-		debugLiteral((String)null);
-		debug("complete");
+		debug((String)null);
+		debug(ChatColor.RESET+Lang.create("debug.complete"));
+		debugRule("rule.end");
 	}
 	
-	static void debugLiteral(String s) {
+	static void debug(String s) {
 		if(!debugMode) return;
 		
 		if(s == null || s.equals("")) player.sendMessage((String)null);
@@ -152,19 +156,19 @@ public final class TeleportCommand {
 	 * Prints a debug message if debug mode is enabled.
 	 * @param message Message to print
 	 */
-	static void debug(String translationKey, Object... args) {
+	static void debugLine(String translationKey, Object... args) {
 		if(!debugMode) return;
 		
 		if(translationKey == null || translationKey == "")
-			debugLiteral(translationKey);
-		else debugLiteral(Lang.create("debug."+translationKey, args));
+			debug(translationKey);
+		else debug(Lang.create("debug."+translationKey, args));
 	}
 	
 	static void debugHeading(String translationKey, Object... args) {
 		if(!debugMode) return;
 		
-		debugLiteral((String)null);
-		String heading = ChatColor.BOLD+Lang.create("debug."+translationKey, args);
+		debug((String)null);
+		String heading = ""+ChatColor.RESET+ChatColor.BOLD+Lang.create("debug."+translationKey, args);
 		
 		// Mimic of AboutCommand#printHeading(String, Object...):
 		// TODO: Move this code to AboutCommand because its redundantly specified twice now
@@ -174,7 +178,14 @@ public final class TeleportCommand {
 				+heading.substring(i);
 		}
 		
-		debugLiteral(heading);
+		debug(heading);
+	}
+	
+	private static void debugRule(String translationKey) {
+		if(!debugMode) return;
+		
+		MessageUtils.sendHorizontalRule(
+			player, '-', ChatColor.YELLOW, Lang.create("debug."+translationKey), ChatColor.DARK_GREEN, ChatColor.BOLD);
 	}
 	
 	private static Object[] locationToArray(Location l) {

@@ -89,6 +89,7 @@ about:
       list:
         - "toydotgame: Developer and maintainer (2020–2025)"
         - "MatDvlp: Feature suggestions (logging improvements and multi-language) (2022)"
+        - "SirSpoodles, ConnorLinfoot: Text centering code for rule lines (code written 2015, implemented 2025)"
     # Thisway version
     thisway:
       # Heading text
@@ -163,22 +164,28 @@ tp:
 debug:
   # New teleportation begins and debug mode is toggled on
   enabled: Debug mode enabled for this teleport
+  # Start and end rule headings. Set as empty strings to disable
+  rule:
+    # Beginning heading
+    begin: THISWAY DEBUG BEGIN
+    # Ending heading
+    end: THISWAY DEBUG END
   # Beginning teleport
   # %,d - Distance (locale magnitude-delimited number, use %s if you want plain int)
   begin:
     # For a distance of 1
-    singular: Teleporting %,d block...
+    singular: "\u00A7oTeleporting %,d block..."
     # For all others
-    plural: Teleporting %,d blocks...
+    plural: "\u00A7oTeleporting %,d blocks..."
   # Direction vector setup logging
   direction-vector:
     # Heading text
     heading: "Facing vector: Server-side values"
     # Values on initalisation of a teleport
     # 1$ - Cardinal direction
-    # 2$ - Yaw (server-side, won't match client)
-    # 3$ - Pitch (server-side, won't match client)
-    values: "    f=%1$s, yaw=%2$s, pitch=%3$s"
+    # 2$.2f - Yaw (server-side, won't match client) (rounded to 2 dp)
+    # 3$.2f - Pitch (server-side, won't match client) (rounded to 2 dp)
+    values: "    f=%1$s, yaw=%2$.2f, pitch=%3$.2f"
   # This string is appended to logs of the distance travelled
   # %,d - Distance (as above, use %s for int)
   distance:
@@ -204,11 +211,11 @@ debug:
     # 2$ - boolean.true|false's value for this check
     check: "%1$s: %2$s"
     # Destination is in terrain, so give a single attempt at trying a destination 1 block higher
-    destination-moved: "    Destination is solid, attempting to move 1 block up"
+    destination-moved: "    \u00A7oDestination is solid, attempting to move 1 block up"
     # Notification that support block checks are disabled for this flying player
     is-flying: Player is flying, ignoring support checks
     # Destination ground isn't stable so we place glass
-    support-placed: "    Destination isn't solid. Placing a support block"
+    support-placed: "    \u00A7oDestination isn't solid. Placing a support block"
   # Player name log
   # %s - Player IGN
   player: "Player: %s"
@@ -216,4 +223,4 @@ debug:
   # %s - World file name
   world: "World: %s"
   # Once the entire logic of the teleport command has completed
-  complete: Teleport complete
+  complete: Teleport complete!

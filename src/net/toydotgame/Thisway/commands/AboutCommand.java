@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
+import dev.linfoot.bukkit.utils.MessageUtils;
 import net.toydotgame.Thisway.Configurator;
 import net.toydotgame.Thisway.Lang;
 import net.toydotgame.Thisway.Option;
@@ -54,7 +55,7 @@ public final class AboutCommand {
 	 * listing which the player does and doesn't have.
 	 */
 	private static void main() {
-		printRule("Thisway");
+		MessageUtils.sendHorizontalRule(sender, '-', ChatColor.YELLOW, "Thisway", ChatColor.DARK_GREEN, ChatColor.BOLD);
 		
 		// Copyright and history
 		sender.sendMessage("(c) 2020, 2025 toydotgame");
@@ -99,7 +100,7 @@ public final class AboutCommand {
 			printValue("about.section.config.option", k, v, d);
 		});
 		
-		printRule((String)null);
+		MessageUtils.sendHorizontalRule(sender, '-', ChatColor.YELLOW, null, ChatColor.DARK_GREEN, ChatColor.BOLD);
 	}
 	
 	private static void printHeading(String translationKey, Object... args) {
@@ -138,26 +139,6 @@ public final class AboutCommand {
 			return boolToWord(Boolean.parseBoolean(s));
 		// Else, not a boolean
 		return s;
-	}
-	
-	/**
-	 * Print a horizontal rule to chat. Works best with strings that
-	 * <i>aren't</i> super long and fill most of a line.
-	 * @param optionalText Text to print in the middle of the horizontal line
-	 * (i.e. as a heading/title). If this string is empty, no text is overlaid
-	 * @see #printRule()
-	 */
-	private static void printRule(String optionalText) {
-		String hr = "-----------------------------------------------------"; // Assumes default chat width
-		if(optionalText != null && optionalText.length() > 0) {
-			final int textLength = Math.min(optionalText.length()+4, hr.length()); // Pick smallest one to avoid StringIndexOutOfBounds
-			optionalText = "[ "+ChatColor.RESET+ChatColor.DARK_GREEN+ChatColor.BOLD+optionalText+ChatColor.YELLOW+" ]";
-			final int startingIndex = (hr.length()-textLength)/2;
-			hr = (new StringBuffer(hr))
-				.replace(startingIndex, startingIndex+textLength, optionalText)
-				.toString()+"-"; // Seems to be consistently off-by-one. Adding this extra char makes it a little over rather than a lot under
-		}
-		sender.sendMessage(ChatColor.YELLOW+hr);
 	}
 	
 	/**

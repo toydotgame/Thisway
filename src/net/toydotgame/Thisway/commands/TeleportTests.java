@@ -69,14 +69,14 @@ class TeleportTests {
 		)) return false;
 		
 		if(player.isFlying()) {
-			TeleportCommand.debug("checks.is-flying");
+			TeleportCommand.debugLine("checks.is-flying");
 			return true;
 		}
 		
 		// Set glass support block if desired:
 		if(Configurator.fetchToggle(Option.SUPPORT_BLOCKS)
 			&& !testAndLogBoolean("destGroundIsSolid", !ground.getBlock().isEmpty())) {
-			TeleportCommand.debug("checks.support-placed");
+			TeleportCommand.debugLine("checks.support-placed");
 			ground.getBlock().setType(Material.GLASS);
 		}
 		// CHECK: If no block was placed, the destination ground must be safe

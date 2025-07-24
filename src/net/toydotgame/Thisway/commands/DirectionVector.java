@@ -57,7 +57,7 @@ class DirectionVector {
 		else direction = directions[Math.round(yaw/45)&0x7];
 		
 		TeleportCommand.debugHeading("direction-vector.heading");
-		TeleportCommand.debug("direction-vector.values", direction, yaw, pitch);
+		TeleportCommand.debugLine("direction-vector.values", direction, yaw, pitch);
 	}
 	
 	/**
