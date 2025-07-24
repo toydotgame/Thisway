@@ -22,6 +22,7 @@ public final class Thisway extends JavaPlugin {
 	// Don't create a constructor. Spigot will run the default JavaPlugin()
 	// constructor instead and that's all we really need
 	
+	// TODO: Probably remove these 3
 	// Even though this class really isn't static, I'm going to treat it as such
 	// given AFAIK, you can't load the same plugin twice (or at least in any way
 	// where conflicts could arise). I think
@@ -70,13 +71,25 @@ public final class Thisway extends JavaPlugin {
 		// CHECK: Must have 1 or 2 args
 		if(args.length < 1 || args.length > 2)
 			return syntaxError(sender, "syntax.args-length");
+			
+		if(args[0].equalsIgnoreCase("about"))
+			return new AboutCommand(this...).run();
 		
-		// BRANCH: If we're running `about`, run and end here
+		try {
+			int distance = Integer.parseInt(args[0]);
+			if(distance < 1) throw new NumberFormatException();
+		} catch(NumberFormatException e) {
+			return syntaxError(sender, "tp.syntax.distance");
+		}
+		
+		return new TeleportCommand(this...).run();
+		
+		/*// BRANCH: If we're running `about`, run and end here
 		if(args[0].equalsIgnoreCase("about"))
 			return AboutCommand.parseAndRun(sender, args);
-		
+				
 		// Else, we're just doing a normal teleport
-		return TeleportCommand.parseAndRun((Player)sender, args);
+		return TeleportCommand.parseAndRun((Player)sender, args);*/
 	}
 	
 	/**
