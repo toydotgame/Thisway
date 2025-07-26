@@ -47,7 +47,7 @@ public class Lang {
 		
 		// WARN: If mismatch between language and plugin version
 		String languageFormat = messages.getString("plugin-format");
-		String pluginVersion = Thisway.updates.INSTALLED_VERSION;
+		String pluginVersion = plugin.getDescription().getVersion();
 		if(languageFormat != null && !languageFormat.equals(pluginVersion)) {
 			log("messages.format-mismatch", preferredLanguage, languageFormat, pluginVersion);
 		}
@@ -61,12 +61,12 @@ public class Lang {
 	public static String create(String key, Object... args) {
 		String fetchedMessage = messages.getString(key);
 		if(fetchedMessage == null && !preferredLanguage.equals("en-US")) { // Don't log this error for en-US because it's fallback and will fail again
-			Thisway.logger.warning(translationFailure(key));
+			plugin.getLogger().warning(translationFailure(key));
 			fetchedMessage = defaults.getString(key);
 		}
 		// If we check the fallback and it's not there, then it needs to be implemented internally:
 		if(fetchedMessage == null) {
-			Thisway.logger.severe(fallbackFailure(key));
+			plugin.getLogger().severe(fallbackFailure(key));
 			return syntaxError(key);
 		}
 		
@@ -82,14 +82,14 @@ public class Lang {
 	public static List<String> fetchList(String key) {
 		List<String> fetchedList = messages.getStringList(key);
 		if(fetchedList.size() == 0 && !preferredLanguage.equals("en-US")) {
-			Thisway.logger.warning(translationFailure(key)
+			plugin.getLogger().warning(translationFailure(key)
 				+"If you are writing your own translation, make sure that "
 				+key+" is a list rather than a mapping");
 			fetchedList = defaults.getStringList(key);
 		}
 		// Again, if it's still null, then it needs to be implemented:
 		if(fetchedList.size() == 0) {
-			Thisway.logger.severe(fallbackFailure(key));
+			plugin.getLogger().severe(fallbackFailure(key));
 			fetchedList.add(syntaxError(key));
 			return fetchedList;
 		}
@@ -109,11 +109,15 @@ public class Lang {
 		return messages.isList(key) || defaults.isList(key);
 	}
 	
+	public static boolean containsKey(String key) {
+		return messages.getString(key) != null || defaults.getString(key) != null;
+	}
+	
 	static void log(String key, Object... args) {
-		Thisway.logger.info(create(key, args));
+		plugin.getLogger().info(create(key, args));
 	}
 	
 	static void logWarning(String key, Object... args) {
-		Thisway.logger.warning(create(key, args));
+		plugin.getLogger().warning(create(key, args));
 	}
 }

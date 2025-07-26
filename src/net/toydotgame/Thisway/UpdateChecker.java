@@ -20,20 +20,20 @@ import org.bukkit.Server;
  */
 public final class UpdateChecker {
 	// Instance fields:
-	public final String INSTALLED_VERSION;
+	private final String INSTALLED_VERSION;
 	private final Thisway PLUGIN_INSTANCE;
-	public boolean IS_UP_TO_DATE = false;
 	// Set later:
-	public String SPIGOTMC_VERSION;
+	private boolean upToDate = false;
+	private String spigotMCVersion;
+	
+	// Constants:
+	private static final String RESOURCE_ID = "87115";
+	private static final String SPIGOT_API = "https://api.spigotmc.org/legacy/update.php?resource=";
 	
 	UpdateChecker(Thisway plugin) {
 		PLUGIN_INSTANCE = plugin;
 		INSTALLED_VERSION = plugin.getDescription().getVersion();
 	}
-	
-	// Constants:
-	private static final String RESOURCE_ID = "87115";
-	private static final String SPIGOT_API = "https://api.spigotmc.org/legacy/update.php?resource=";
 	
 	/**
 	 * Asynchronously gets the latest plugin version string from the SpigotMC
@@ -45,7 +45,7 @@ public final class UpdateChecker {
 	private void getLatestVersionFromAPI(Runnable r) {
 		Bukkit.getScheduler().runTaskAsynchronously(PLUGIN_INSTANCE, () -> {
 			try(Scanner s = new Scanner(new URL(SPIGOT_API+RESOURCE_ID).openStream())) {
-				if(s.hasNext()) SPIGOTMC_VERSION = s.next();
+				if(s.hasNext()) spigotMCVersion = s.next();
 			} catch(IOException e) {} // If we fail to get a meaningful response, we fall through with `null`
 			
 			// Run the lambda:
@@ -67,14 +67,14 @@ public final class UpdateChecker {
 		// if failed). It then runs the input lambda as a kind of callback:
 		getLatestVersionFromAPI(() -> {
 			// We get null if the fetch failed:
-			if(SPIGOTMC_VERSION == null) {
+			if(spigotMCVersion == null) {
 				Lang.logWarning("updates.fetch-failure");
 				return;
 			}
 			
 			// Check if up-to-date:
-			if(INSTALLED_VERSION.equals(SPIGOTMC_VERSION)) {
-				IS_UP_TO_DATE = true;
+			if(INSTALLED_VERSION.equals(spigotMCVersion)) {
+				upToDate = true;
 				return;
 			}
 			// Else, inform the user
@@ -83,17 +83,17 @@ public final class UpdateChecker {
 			if(!Configurator.fetchToggle(Option.VERSION_ALERTS)) return;
 			
 			// If not up-to-date, are we ahead or behind?:
-			String greaterVersion = getGreaterVersion(INSTALLED_VERSION, SPIGOTMC_VERSION);
+			String greaterVersion = getGreaterVersion(INSTALLED_VERSION, spigotMCVersion);
 			if(greaterVersion == INSTALLED_VERSION) {
-				Thisway.logger.fine(Lang.create("updates.version-ahead"));
-			} else if(greaterVersion == SPIGOTMC_VERSION) {
-				String message = Lang.create("updates.version-behind", SPIGOTMC_VERSION, INSTALLED_VERSION);					
+				PLUGIN_INSTANCE.getLogger().fine(Lang.create("updates.version-ahead"));
+			} else if(greaterVersion == spigotMCVersion) {
+				String message = Lang.create("updates.version-behind", spigotMCVersion, INSTALLED_VERSION);					
 				// Broadcast to console and ops:
 				if(Configurator.fetchToggle(Option.BROADCAST_VERSION_ALERTS))
 					Bukkit.getServer().broadcast("[Thisway] "+ChatColor.YELLOW+message, Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
-				else Thisway.logger.warning(message);
+				else PLUGIN_INSTANCE.getLogger().warning(message);
 			} else {
-				Lang.logWarning("updates.version-unknown", INSTALLED_VERSION, SPIGOTMC_VERSION);
+				Lang.logWarning("updates.version-unknown", INSTALLED_VERSION, spigotMCVersion);
 			}
 		});
 	}
@@ -121,5 +121,17 @@ public final class UpdateChecker {
 			}
 		}
 		return null; // Iteration completed where all elements checked were equal
+	}
+	
+	public boolean isUpToDate() {
+		return upToDate;
+	}
+	
+	public String getInstalledVersion() {
+		return INSTALLED_VERSION;
+	}
+	
+	public String getLatestVersion() {
+		return spigotMCVersion;
 	}
 }

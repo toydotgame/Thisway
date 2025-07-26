@@ -1,4 +1,4 @@
-package dev.linfoot.bukkit.utils;
+package net.toydotgame.Thisway.commands.utils;
 
 /**
  * Stores the character widths of common characters. Adapated enum from SpigotMC

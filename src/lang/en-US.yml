@@ -118,7 +118,7 @@ about:
       # Individual permission entry, excluding the bullet
       # 1$ - Permission name
       # 2$ - boolean.true|false's value for this permission
-      permission: "%1$s: %2$s"
+      permission: "\u2192 %1$s: %2$s"
       # If the executor is an operator or not
       # %s - boolean.true|false's value
       is-op: "Operator?: %s"
@@ -180,7 +180,7 @@ debug:
   # Direction vector setup logging
   direction-vector:
     # Heading text
-    heading: "Facing vector: Server-side values"
+    heading: "Facing vector: (Server-side values)"
     # Values on initalisation of a teleport
     # 1$ - Cardinal direction
     # 2$.2f - Yaw (server-side, won't match client) (rounded to 2 dp)
@@ -205,15 +205,15 @@ debug:
   # Destination safety/suitability tests
   checks:
     # Heading text
-    heading: "Safety tests:"
-    # Individual check log entry, excluding the bullet
+    heading: Safety tests
+    # Individual check log entry
     # 1$ - Check name
     # 2$ - boolean.true|false's value for this check
-    check: "%1$s: %2$s"
+    check: "\u2022 %1$s: %2$s"
     # Destination is in terrain, so give a single attempt at trying a destination 1 block higher
     destination-moved: "    \u00A7oDestination is solid, attempting to move 1 block up"
     # Notification that support block checks are disabled for this flying player
-    is-flying: Player is flying, ignoring support checks
+    is-flying: "    \u00A7oPlayer is flying, ignoring support checks"
     # Destination ground isn't stable so we place glass
     support-placed: "    \u00A7oDestination isn't solid. Placing a support block"
   # Player name log

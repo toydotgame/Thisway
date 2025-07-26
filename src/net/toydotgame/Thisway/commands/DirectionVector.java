@@ -43,7 +43,7 @@ class DirectionVector {
 	 * before and instead of a cardinal octant.
 	 * @param l {@link Location} to use
 	 */
-	DirectionVector(Location l) {
+	DirectionVector(TeleportCommand caller, Location l) {
 		yaw = l.getYaw();
 		pitch = l.getPitch();
 		if(pitch < -45) direction = BlockFace.UP;
@@ -56,8 +56,8 @@ class DirectionVector {
 		 */
 		else direction = directions[Math.round(yaw/45)&0x7];
 		
-		TeleportCommand.debugHeading("direction-vector.heading");
-		TeleportCommand.debugLine("direction-vector.values", direction, yaw, pitch);
+		caller.getDebugger().heading("direction-vector.heading");
+		caller.getDebugger().println("direction-vector.values", direction, yaw, pitch);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ class DirectionVector {
 	 * @see DirectionVector
 	 * @see Location#add(Vector)
 	 */
-	Vector createPositionVector(int d) {
+	Vector createVector(int d) {
 		return new Vector(
 			direction.getModX()*d, direction.getModY()*d, direction.getModZ()*d
 		);

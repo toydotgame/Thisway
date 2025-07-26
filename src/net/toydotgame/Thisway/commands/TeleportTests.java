@@ -3,11 +3,11 @@ package net.toydotgame.Thisway.commands;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.toydotgame.Thisway.Configurator;
 import net.toydotgame.Thisway.Lang;
 import net.toydotgame.Thisway.Option;
+import net.toydotgame.Thisway.commands.utils.MessageUtils;
 
 /**
  * Class that encapsulates the general block checks for a teleportation to
@@ -20,8 +20,9 @@ import net.toydotgame.Thisway.Option;
  */
 class TeleportTests {
 	// Instance fields:
-	private Location destination, eye, ground;
-	private Player player;
+	private final TeleportCommand caller;
+	private final Player player;
+	private final Location destination, eye, ground;
 	
 	/**
 	 * Creates a new test instance for the provided references to a destination
@@ -40,11 +41,12 @@ class TeleportTests {
 	 * on Y
 	 * @param destinationGround {@code destination} -1 on Y
 	 */
-	TeleportTests(Player player, Location destination, Location destinationEye, Location destinationGround) {
-		this.destination = destination;
-		eye = destinationEye;
-		ground = destinationGround;
+	TeleportTests(TeleportCommand caller, Player player, Destination destination) {
+		this.caller = caller;
 		this.player = player;
+		this.destination = destination.get();
+		this.eye = destination.getEye();
+		this.ground = destination.getGround();
 	}
 	
 	/**
@@ -69,18 +71,19 @@ class TeleportTests {
 		)) return false;
 		
 		if(player.isFlying()) {
-			TeleportCommand.debugLine("checks.is-flying");
+			caller.getDebugger().println("checks.is-flying");
 			return true;
 		}
 		
 		// Set glass support block if desired:
+		System.err.println(ground.getBlock().getType()+" "+ground.getBlock().isEmpty());
 		if(Configurator.fetchToggle(Option.SUPPORT_BLOCKS)
-			&& !testAndLogBoolean("destGroundIsSolid", !ground.getBlock().isEmpty())) {
-			TeleportCommand.debugLine("checks.support-placed");
+			&& !testAndLogBoolean("destGroundIsNotEmpty", !ground.getBlock().isEmpty())) {
+			caller.getDebugger().println("checks.support-placed");
 			ground.getBlock().setType(Material.GLASS);
 		}
 		// CHECK: If no block was placed, the destination ground must be safe
-		else if(!testAndLogBoolean("destHasSupport", ground.getBlock().getType().isSolid())) {
+		else if(!testAndLogBoolean("destGroundIsSolid", ground.getBlock().getType().isSolid())) {
 			return error("tp.error.support-failed");
 		}
 		
@@ -131,13 +134,10 @@ class TeleportTests {
 	 * @return {@code condition}
 	 * @see #test(boolean, String, String)
 	 */
-	static boolean testAndLogBoolean(CommandSender sender, String name, boolean condition) {
-		AboutCommand.printValue(sender, "debug.checks.check",
-			name, AboutCommand.boolToWord(condition));
+	boolean testAndLogBoolean(String name, boolean condition) {
+		if(caller.getDebugger().isEnabled())
+			MessageUtils.printKeyValue(player, "debug.checks.check",
+				name, MessageUtils.boolToWord(condition));
 		return condition;
-	}
-	
-	private boolean testAndLogBoolean(String name, boolean condition) {
-		return testAndLogBoolean(player, name, condition);
 	}
 }

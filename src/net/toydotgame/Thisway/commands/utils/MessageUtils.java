@@ -1,7 +1,8 @@
-package dev.linfoot.bukkit.utils;
+package net.toydotgame.Thisway.commands.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import net.toydotgame.Thisway.Lang;
 
 /**
  * Wrapper class adapted from the method on the SpigotMC forums.
@@ -127,5 +128,46 @@ public class MessageUtils {
 		}
 		
 		return sb.toString();
+	}
+	
+	public static void printHeading(CommandSender sender, String key, Object... args) {
+		// Print empty line before heading. Using a null string causes less
+		// visual issues than "\n" and uses less memory than ""
+		sender.sendMessage((String)null);
+		
+		String heading = ""+ChatColor.RESET+ChatColor.BOLD
+			+Lang.create(key, args);
+		int i = heading.indexOf(':');
+		if(i >= 0) { // If the heading contains a key-value pair, format it as such:
+			heading = heading.substring(0, ++i)
+				+ChatColor.RESET+ChatColor.GRAY
+				+heading.substring(i);
+		}
+		
+		sender.sendMessage(heading);
+	}
+	
+	public static void printKeyValue(CommandSender sender, String translationKey, Object... args) {
+		String line = "", linePrefix = ChatColor.GRAY.toString();
+		if(Lang.isList(translationKey))
+			for(String s : Lang.fetchList(translationKey))
+				sender.sendMessage(linePrefix+s);
+		else {
+			for(int i = 0; i < args.length; i++) // Fix formatting resets:
+				args[i] += ChatColor.GRAY.toString();
+			line = linePrefix+Lang.create(translationKey, args);
+			sender.sendMessage(line);
+		}
+	}
+	
+	/**
+	 * Converts an input boolean value to a coloured text string "Yes" or "No".
+	 * @param b Input formula or expression, or boolean constant to evaluate
+	 * @return A green "Yes" for printing to chat if {@code b == true}, or a red
+	 * "No" if {@code b == false}
+	 */
+	public static String boolToWord(boolean b) {
+		return (b ? ChatColor.GREEN+Lang.create("boolean.true")
+			:ChatColor.RED+Lang.create("boolean.false"))+ChatColor.RESET;
 	}
 }
