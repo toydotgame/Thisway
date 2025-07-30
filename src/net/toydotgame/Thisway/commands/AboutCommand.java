@@ -74,14 +74,14 @@ public class AboutCommand {
 		UpdateChecker u = plugin.getUpdates();
 		printHeading("section.thisway.heading");
 		printValue("section.thisway.installed",
-			(u.SPIGOTMC_VERSION != null                            // Colour for local version
-				?(u.IS_UP_TO_DATE ? ChatColor.GREEN:ChatColor.RED) // If SpigotMC version is valid, we can use IS_UP_TO_DATE to format our local version as good or not
-				:ChatColor.YELLOW)                                               // If SpigotMC version is _invalid_, then go yellow instead
-			+u.INSTALLED_VERSION);
+			(u.getLatestVersion() != null                         // Colour for local version:
+				?(u.isUpToDate() ? ChatColor.GREEN:ChatColor.RED) // If SpigotMC version is valid, we can use IS_UP_TO_DATE to format our local version as good or not
+				:ChatColor.YELLOW)                                // If SpigotMC version is _invalid_, then go yellow instead
+			+u.getInstalledVersion());
 		printValue("section.thisway.spigotmc",
-			(u.SPIGOTMC_VERSION != null
-			?ChatColor.GREEN+u.SPIGOTMC_VERSION // If SpigotMC version is valid, make it green always
-			:ChatColor.YELLOW+"<unknown>"));                  // If not, say "<unknown>" in yellow
+			(u.getLatestVersion() != null
+			?ChatColor.GREEN+u.getLatestVersion() // If SpigotMC version is valid, make it green always
+			:ChatColor.YELLOW+"<unknown>"));      // If not, say "<unknown>" in yellow
 		
 		// Minecraft/server version info
 		printHeading("section.minecraft.heading", Bukkit.getBukkitVersion().split("-")[0]);

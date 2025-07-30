@@ -1,0 +1,8 @@
+TODO:
+	Message.yml or messages enum and replace all logging
+		french language because ugh alas he deserves it for suggesting language
+		probs use config.yml
+		languages: en, fr, jp, lolcat
+		~~updatechecker constructor docs~~
+		static updatechecker
+		constructors where parameters exactly match field names
